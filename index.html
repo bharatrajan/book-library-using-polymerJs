@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!--Meta tag declaration-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+
+    <title>My Reads - PolymerJS</title>
+
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <script type="text/javascript">
+      //Call webcomponents-lite.min.js if required
+      (function(isWebcomponentsPresent){
+          if(!isWebcomponentsPresent){
+          var l = document.createElement("script");
+          l.async = true;
+          l.src = "bower_components/webcomponentsjs/webcomponents-lite.min.js";
+          document.head.appendChild(l);
+        }
+      })('registerElement' in document
+                  && 'import' in document.createElement('link')
+                  && 'content' in document.createElement('template'));
+
+    </script>
+
+    <!-- Secondary library includes -->
+    <link rel="import" href="elements.html">
+    <link rel="import" href="books-api.html">
+
+    <!--script src="../webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="elements/blog-app.html"-->
+  </head>
+  <body>
+    <book-listing>
+      <book-shelf data-name="continue-reading" data-title="Continue Reading">
+          <template is="dom-repeat" items="{{model.continueReading}}" as="book">
+            <single-book data-book-object={{book}}></<single-book>>
+          </template>
+      </book-shelf>
+      <book-shelf data-name="want-to-read" data-title="Want to read">
+        <template is="dom-repeat" items="{{model.continueReading}}" as="book">
+          <single-book data-book-object={{book}}></<single-book>>
+        </template>
+      </book-shelf>
+      <book-shelf data-name="read" data-title="read">
+        <template is="dom-repeat" items="{{model.continueReading}}" as="book">
+          <single-book data-book-object={{book}}></<single-book>>
+        </template>
+      </book-shelf>
+    </book-listing>
+    <book-lookup></book-lookup>
+  </body>
+  <books-api></books-api>
+</html>
