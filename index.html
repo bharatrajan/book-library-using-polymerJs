@@ -28,7 +28,29 @@
     <link rel="stylesheet" type="text/css" href="../../app.css"/>
   </head>
   <body>
-    <book-listing></book-listing>
-    <book-lookup></book-lookup>
+      <!-- app-location binds to the app's URL -->
+      <app-location use-hash-as-path route="{{route}}"></app-location>
+
+      <!-- this app-route manages the top-level routes -->
+      <app-route
+          route="{{route}}"
+          pattern="/:list"
+          data="{{routeData}}"
+          tail="{{subroute}}"></app-route>
+      <app-route
+          route="{{route}}"
+          pattern="/:search"
+          data="{{routeData}}"
+          tail="{{subroute}}"></app-route>
+
+      <iron-pages selected="[[routeData.view]]" attr-for-selected="name">
+        <book-listing name="#list" route="{{subroute}}"></book-listing>
+        <book-lookup name="#search" route="{{subroute}}"></book-lookup>
+      </iron-pages>
+
+
   </body>
+  <script>
+    window.location = "#list";
+  </script>
 </html>

@@ -37,6 +37,8 @@
             -ms-justify-content: center;
         }
         .book-cover {
+            background-repeat: no-repeat !important;
+            background-size: cover !important;
             box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
             background: #eee;
         }
@@ -75,12 +77,12 @@
           style$="width:128px; height:193px; background: url('{{imageLink}}');"
          ></div>
         <div class="book-shelf-changer">
-          <select on-change="onShelfChange" defaultValue$="{{dataBookObject.shelf}}">
+          <select on-change="onShelfChange">
             <option value="none" disabled>Move to...</option>
-            <option value="currentlyReading">Currently Reading</option>
-            <option value="wantToRead">Want to Read</option>
-            <option value="read">Read</option>
-            <option value="none">None</option>
+            <option class="enabledOption" value="currentlyReading">Currently Reading</option>
+            <option class="enabledOption" value="wantToRead">Want to Read</option>
+            <option class="enabledOption" value="read">Read</option>
+            <option class="enabledOption" value="none">None</option>
           </select>
         </div>
       </div>
@@ -129,12 +131,25 @@
 
         this.set("authorList", authorList);
         this.set("imageLink", imageLink);
+        this._presetSelectedOption(bookObject);
+      },
 
+      _presetSelectedOption: function(bookObject){
+        var options = this.querySelectorAll(".enabledOption"), i;
+        for(i=0; i < options.length; i++)
+          if(options[i].value == bookObject.shelf){
+              options[i].selected = true;
+              return;
+          }
       },
 
       _onClickHandler: function() {
-        if(this.isMultiSelectable)
+        if(this.isMultiSelectable){
           this.set("selectStatus", this.selectStatus == "UNSELECTED" ? "SELECTED" : "UNSELECTED");
+          this.fire("ON" + this.selectStatus, {
+            "book": this.dataBookObject
+          })
+        }
       },
 
       onShelfChange: function(event) {

@@ -54,7 +54,7 @@ suite('<single-book>', function() {
   });
 
   //########################  Exist & Attached  ########################
-  test('Is exist', function() {
+  test('Is exist 001', function() {
       expect(sbFixture).to.exist;
   });
 

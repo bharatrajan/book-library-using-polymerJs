@@ -1,0 +1,163 @@
+<dom-module id="book-lookup">
+
+<template>
+
+  <style>
+    :host {
+
+    }
+
+  </style>
+
+      <div class="search-books">
+        <div class="search-books-bar">
+          <a href="/#list" class="close-search">Close</a>
+          <div class="search-books-input-wrapper">
+            <paper-input
+              style="background: white !important;"
+              type="text"
+              value="{{userInput}}"
+              id="paperInput"
+              placeholder="Search by title or author">
+            </paper-input>
+        </div>
+      </div>
+
+      <div class="search-suggestions" hidden$="[[model.hideSuggestion]]">
+        <span> Popular search terms are . . .
+               <br/>
+               React, iOS & Android </span>
+      </div>
+
+
+      <div class="bulk-update" hidden$="[[model.hideButtons]]">
+        <div class="bulk-update-option"
+             on-click="_updateToContinueReading">
+          <span class="add-to">Add to . . .</span>
+          <span>Continue Reading</span>
+        </div>
+        <div class="bulk-update-option"
+             on-click="_updateToWantToRead">
+          <span class="add-to">Add to . . .</span>
+          <span>Want to Read</span>
+        </div>
+        <div class="bulk-update-option"
+             on-click="_updateToRead">
+          <span class="add-to">Add to . . .</span>
+          <span>Read</span>
+        </div>
+      </div>
+
+      <div class="search-books-results" hidden$="[[model.hideResults]]">
+        <ol class="books-grid">
+          <template is="dom-repeat" items="{{model.searchResults}}" as="singleBookData">
+            <li id$={{bookItem.id}}>
+                <single-book is-multi-selectable data-book-object="[[singleBookData]]"></<single-book>
+            </li>
+          </template>
+        </ol>
+      </div>
+  </div>
+
+</template>
+
+<script>
+  Polymer({
+    is: 'book-lookup',
+    properties: {
+
+      model: {
+        type: Object,
+        value: {
+          "searchResults" : [],
+          "hideSuggestion" : false,
+          "hideButtons" : true,
+          "hideResults" : true
+        }
+      },
+
+      selectedBookList: {
+        type: Object,
+        value: {}
+      },
+
+      userInput: {
+        type: String,
+        observer: "onUserType"
+      }
+    },
+
+    listeners: {
+      "ONSELECTED": "onBookSelected",
+      "ONUNSELECTED": "onBookUnselected",
+      "onSearchSuccess": "onSearchSuccess",
+      "onUpdateSuccess" : "onUpdateSuccess",
+      "onBookShelfChanged": "onBookShelfChanged"
+    },
+
+    onBookSelected: function(event, detail){
+      var propName = "selectedBookList" + "." + detail.book.id;
+      this.set(propName, detail.book)
+    },
+
+    onBookUnselected: function(event, detail){
+      var propName = "selectedBookList" + "." + detail.book.id;
+      this.set(propName, undefined);
+    },
+
+    onUserType: function(userInput){
+      this.BooksApi.searchBook(userInput);
+    },
+
+    _updateToContinueReading: function() {
+      this._update("currentlyReading");
+    },
+
+    _updateToWantToRead: function() {
+      this._update("wantToRead");
+    },
+
+    _updateToRead: function() {
+      this._update("read");
+    },
+
+    _update: function(newShelf){
+      for(var bookid in this.selectedBookList)
+        if(this.selectedBookList[bookid])
+           this.BooksApi.updateBook(bookid, newShelf);
+      this._showBookListing();
+    },
+
+    attached: function() {
+      this.set("searchResults", []);
+      this.BooksApi = new BooksApi({});
+      this.appendChild(this.BooksApi);
+      this.BooksApi.getAllBooks();
+    },
+
+    onSearchSuccess: function(event, detail){
+      var newModel = {
+        "searchResults" : detail.books,
+        "hideSuggestion" : (detail.books.length !== 0),
+        "hideButtons" : (detail.books.length == 0),
+        "hideResults" : (detail.books.length == 0)
+      };
+      this.set("model", newModel);
+    },
+
+    onUpdateSuccess: function(event, detail){
+      this._showBookListing();
+    },
+
+    _showBookListing: function(){
+        //TODO : change view
+    },
+
+    onBookShelfChanged: function(event, detail){
+      this.BooksApi.updateBook(detail.bookId, detail.newShelf);
+    }
+
+  });
+</script>
+
+</dom-module>

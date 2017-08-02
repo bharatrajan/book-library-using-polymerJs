@@ -5,6 +5,7 @@ body {
 background-color: #EBEEF0 !important;
 font-family: Raleway !important;
 line-height: 1.5;
+margin: 0px !important;
 }
 body, .app {
 }
@@ -147,6 +148,7 @@ opacity: 0.8;
 
 .search-books-bar {
 position: fixed;
+background: white !important;
 width: 100%;
 top: 0;
 left: 0;
