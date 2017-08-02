@@ -1,0 +1,33 @@
+{
+  "name": "book-library-using-polymerjs",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://bharatrajan@github.com/bharatrajan/book-library-using-polymerJs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bharatrajan/book-library-using-polymerJs/issues"
+  },
+  "homepage": "https://github.com/bharatrajan/book-library-using-polymerJs#readme",
+  "devDependencies": {
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.2",
+    "cors": "^2.8.4",
+    "express": "^4.15.3",
+    "express-http-proxy": "^1.0.6",
+    "fs": "0.0.1-security",
+    "promise": "^8.0.1",
+    "sys": "0.0.1"
+  }
+}

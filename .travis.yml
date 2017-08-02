@@ -3,7 +3,6 @@ node_js: stable
 dist: trusty
 sudo: required
 addons:
-  firefox: latest
   sauce_connect: true
   apt:
     sources:
@@ -12,6 +11,7 @@ addons:
     - google-chrome-stable
 before_script:
 - npm install -g bower polylint web-component-tester
+- npm install
 - bower install
 - polylint
 script:
