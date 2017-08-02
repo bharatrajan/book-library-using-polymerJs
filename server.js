@@ -23,8 +23,15 @@ app.use(function(req, res, next) {
   next();
 });
 
+
+//Proxy /api to dev environment
+app.use('/proxy', expProxy('https://reactnd-books-api.udacity.com/', {
+  preserveHostHdr: true
+}));
+
+
 //GetBooks calls
-var getBooks = "curl 'https://reactnd-books-api.udacity.com/books' -H 'Pragma: no-cache' -H 'Origin: http://localhost:3000' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8' -H 'authorization: ΩΩΩΩΩSomeAuthCodeΩΩΩΩ' -H 'accept: application/json' -H 'Cache-Control: no-cache' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Connection: keep-alive' -H 'Referer: http://localhost:3000/' -H 'DNT: 1' --compressed";
+var getBooks = "curl 'https://reactnd-books-api.udacity.com/books' -H 'cache-control: no-cache' -H 'Pragma: no-cache' -H 'Origin: http://localhost:3000' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8' -H 'authorization: ΩΩΩΩΩSomeAuthCodeΩΩΩΩ' -H 'accept: application/json' -H 'Cache-Control: no-cache' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Connection: keep-alive' -H 'Referer: http://localhost:3000/' -H 'DNT: 1' --compressed";
 
 //Request handling
 app.get('/bookapi/books',function(req, res){
@@ -52,7 +59,7 @@ app.get('/bookapi/books',function(req, res){
 });
 
 //Update Books
-var updateBooks = "curl 'https://reactnd-books-api.udacity.com/books/ΩΩΩΩΩbookIDΩΩΩΩ' -X PUT -H 'Pragma: no-cache' -H 'Origin: http://localhost:3000' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8' -H 'authorization: ΩΩΩΩΩSomeAuthCodeΩΩΩΩ' -H 'content-type: application/json' -H 'accept: application/json' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Cache-Control: no-cache' -H 'Referer: http://localhost:3000/' -H 'Connection: keep-alive' -H 'DNT: 1' --data-binary 'ΩΩΩΩΩbodyΩΩΩΩ' --compressed"
+var updateBooks = "curl 'https://reactnd-books-api.udacity.com/books/ΩΩΩΩΩbookIDΩΩΩΩ' -X PUT -H 'cache-control: no-cache' -H 'Pragma: no-cache' -H 'Origin: http://localhost:3000' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8' -H 'authorization: ΩΩΩΩΩSomeAuthCodeΩΩΩΩ' -H 'content-type: application/json' -H 'accept: application/json' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Cache-Control: no-cache' -H 'Referer: http://localhost:3000/' -H 'Connection: keep-alive' -H 'DNT: 1' --data-binary 'ΩΩΩΩΩbodyΩΩΩΩ' --compressed"
 
 //Request handling
 app.put('/bookapi/books/:booksId',function(req, res){
@@ -84,7 +91,7 @@ app.put('/bookapi/books/:booksId',function(req, res){
 
 //
 //GetBooks calls
-var searchQuery = "curl 'https://reactnd-books-api.udacity.com/search' -H 'Pragma: no-cache' -H 'Origin: http://localhost:3000' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8' -H 'authorization: ΩΩΩΩΩSomeAuthCodeΩΩΩΩ' -H 'content-type: application/json' -H 'accept: application/json' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Cache-Control: no-cache' -H 'Referer: http://localhost:3000/search' -H 'Connection: keep-alive' -H 'DNT: 1' --data-binary 'ΩΩΩΩΩbodyΩΩΩΩ' --compressed";
+var searchQuery = "curl 'https://reactnd-books-api.udacity.com/search' -H 'Pragma: no-cache' -H 'cache-control: no-cache' -H 'Origin: http://localhost:3000' -H 'Accept-Encoding: gzip, deflate, br' -H 'Accept-Language: en-US,en;q=0.8' -H 'authorization: ΩΩΩΩΩSomeAuthCodeΩΩΩΩ' -H 'content-type: application/json' -H 'accept: application/json' -H 'User-Agent: Mozilla/5.0 (iPhone; CPU iPhone OS 9_1 like Mac OS X) AppleWebKit/601.1.46 (KHTML, like Gecko) Version/9.0 Mobile/13B143 Safari/601.1' -H 'Cache-Control: no-cache' -H 'Referer: http://localhost:3000/search' -H 'Connection: keep-alive' -H 'DNT: 1' --data-binary 'ΩΩΩΩΩbodyΩΩΩΩ' --compressed";
 
 //Request handling
 app.post('/bookapi/search',function(req, res){

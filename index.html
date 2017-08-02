@@ -14,7 +14,7 @@
           if(!isWebcomponentsPresent){
           var l = document.createElement("script");
           l.async = true;
-          l.src = "bower_components/webcomponentsjs/webcomponents-lite.min.js";
+          l.src = "bower_components/webcomponentsjs/webcomponents-lite.js";
           document.head.appendChild(l);
         }
       })('registerElement' in document
@@ -25,30 +25,10 @@
 
     <!-- Secondary library includes -->
     <link rel="import" href="elements.html">
-    <link rel="import" href="books-api.html">
-
-    <!--script src="../webcomponentsjs/webcomponents-lite.js"></script>
-    <link rel="import" href="elements/blog-app.html"-->
+    <link rel="stylesheet" type="text/css" href="../../app.css"/>
   </head>
   <body>
-    <book-listing>
-      <book-shelf data-name="continue-reading" data-title="Continue Reading">
-          <template is="dom-repeat" items="{{model.continueReading}}" as="book">
-            <single-book data-book-object={{book}}></<single-book>>
-          </template>
-      </book-shelf>
-      <book-shelf data-name="want-to-read" data-title="Want to read">
-        <template is="dom-repeat" items="{{model.continueReading}}" as="book">
-          <single-book data-book-object={{book}}></<single-book>>
-        </template>
-      </book-shelf>
-      <book-shelf data-name="read" data-title="read">
-        <template is="dom-repeat" items="{{model.continueReading}}" as="book">
-          <single-book data-book-object={{book}}></<single-book>>
-        </template>
-      </book-shelf>
-    </book-listing>
+    <book-listing></book-listing>
     <book-lookup></book-lookup>
   </body>
-  <books-api></books-api>
 </html>

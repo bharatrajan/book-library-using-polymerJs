@@ -1,0 +1,88 @@
+<dom-module id="book-shelf">
+
+  <template>
+
+    <style>
+        :host {}
+        .bookshelf {
+          padding: 0 10px 20px;
+        }
+
+        .bookshelf-title {
+          font-family: RalewayEL;
+        }
+        @media (min-width: 600px) {
+          .bookshelf {
+            padding: 0 20px 40px;
+          }
+        }
+
+        .bookshelf-title {
+          border-bottom: 1px solid #dedede;
+        }
+        .bookshelf-books {
+          text-align: center;
+        }
+
+        .books-grid {
+          list-style-type: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+        }
+        .books-grid li {
+          padding: 10px 15px;
+          text-align: left;
+        }
+    </style>
+
+    <div class="bookshelf" hidden$="{{hidden}}">
+       <div>
+        <h2 class="bookshelf-title">{{dataTitle}}</h2>
+        <div class="bookshelf-books">
+          <ol class="books-grid">
+            <template is="dom-repeat" items="{{bookList}}" as="singleBookData">
+              <li id$={{bookItem.id}}>
+                  <single-book data-book-object="[[singleBookData]]"></<single-book>
+              </li>
+            </template>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+  </template>
+
+  <script>
+    Polymer({
+      is: 'book-shelf',
+
+      properties: {
+
+        dataTitle : {
+          value: false,
+          type: String,
+          reflectToAttribute: true
+        },
+
+        bookList : {
+          type: Object,
+          observer: "_propChangeObserver"
+        },
+
+        hidden: {
+          type: Boolean,
+          value: true
+        }
+      },
+
+      _propChangeObserver: function(bookList){
+        this.set("hidden", (bookList.length === 0));
+      }
+
+    });
+  </script>
+
+</dom-module>

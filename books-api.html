@@ -45,7 +45,7 @@
   (function() {
 
 
-  Polymer({
+  BooksApi = Polymer({
                   is: 'books-api',
                   properties: {
 
@@ -54,7 +54,6 @@
                   attached : function() {
                     this.generateToken();
                     this.doInitSetup();
-                    window.booksApi = this;
                   },
 
                   generateToken: function() {
@@ -68,10 +67,13 @@
 
                   doInitSetup: function() {
                     // Set other info needed to make API calls
-                    this.set("api", "http://localhost:3001/bookapi");
+                    //this.set("api", "http://localhost:3001/bookapi");
+                    this.set("api", "https://reactnd-books-api.udacity.com");
+
                     this.set("headers", {
                                       'Accept': 'application/json',
                                       'Authorization': this.token,
+                                      'cache-control': 'no-cache',
                                       'Content-Type': 'application/json'
                                     });
                   },

@@ -1,0 +1,119 @@
+<dom-module id="book-listing">
+
+  <template>
+    <style>
+        :host {}
+        .list-books{
+          background-color: #EBEEF0;
+        }
+        .list-books-title {
+          padding: 10px 0;
+          background: #000;
+          text-align: center;
+          font-family: RalewayEL;
+        }
+        .list-books-title h1 {
+          font-weight: 400;
+          margin: 0;
+          color: white;
+        }
+        .list-books-content {
+          background-color: #EBEEF0;
+          padding: 0 0 80px;
+          flex: 1;
+        }
+
+    </style>
+    <div class="list-books">
+      <div class="list-books-title">
+        <h1>LIBRARY</h1>
+      </div>
+      <div class="list-books-content">
+
+        <book-shelf book-list="[[model.continueReadingList]]" data-title="Continue Reading">
+        </book-shelf>
+        <book-shelf book-list="[[model.wantToReadList]]" data-title="Want to read">
+        </book-shelf>
+        <book-shelf book-list="[[model.readList]]" data-title="read">
+        </book-shelf>
+      </div>
+    </div>
+  </template>
+
+  <script>
+    Polymer({
+      is: 'book-listing',
+
+      properties: {
+
+        dataTitle : {
+          value: false,
+          type: String,
+          reflectToAttribute: true
+        },
+
+        model : {
+          type: Object,
+          value : {
+            "continueReadingList": [],
+            "wantToReadList": [],
+            "readList": []
+          }
+        }
+      },
+
+      listeners:{
+        "onAPIError": "onAPIError",
+        "onGetSuccess": "onGetSuccess",
+        "onUpdateSuccess": "onUpdateSuccess",
+        "onBookShelfChanged": "onBookShelfChanged"
+      },
+
+      onAPIError: function(event, detail) {
+        console.log("detail", detail);
+      },
+
+      onGetSuccess: function(event, detail) {
+        var i, continueReadingList = [],
+               wantToReadList = [],
+               readList = [], switchLogic = {};
+
+       switchLogic = {
+                        "currentlyReading": function(book){continueReadingList.push(book)},
+                        "wantToRead": function(book){wantToReadList.push(book)},
+                        "read": function(book){readList.push(book)}
+                      };
+
+
+        detail.books.forEach(function(book){
+          switchLogic[book.shelf](book)
+        });
+
+        console.log("continueReadingList", continueReadingList);
+        console.log("wantToReadList", wantToReadList);
+        console.log("readList", readList);
+
+        this.set("model.continueReadingList", continueReadingList);
+        this.set("model.wantToReadList", wantToReadList);
+        this.set("model.readList", readList);
+
+      },
+
+      onBookShelfChanged: function(event, detail) {
+        this.BooksApi.updateBook(detail.bookId, detail.newShelf);
+      },
+
+      onUpdateSuccess: function(event, detail) {
+        this.BooksApi.getAllBooks();
+      },
+
+      attached: function() {
+        this.BooksApi = new BooksApi({});
+        this.appendChild(this.BooksApi);
+        this.BooksApi.getAllBooks();
+      }
+
+    });
+  </script>
+
+</dom-module>

@@ -1,0 +1,20 @@
+<html>
+  <head>
+    <link rel="import" href="../../../../../bower_components/polymer/polymer.html"/>
+    <script src="../../../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../app.css"/>
+    <link rel="import" href="../single-book.html"/>
+
+    <script src="../../../../../bower_components/chai-dom/chai-dom.js"></script>
+    <script src="../../../../../bower_components/chai-dom/chai-string.js"></script>
+    <script src="../../../../../bower_components/web-component-tester/browser.js"></script>
+  </head>
+  <body>
+    <test-fixture id="single-book-fixture">
+      <template>
+        <single-book is-multi-selectable id="demoSingleBook"></single-book>
+      </template>
+    </test-fixture>
+  </body>
+  <script src="js/test.js"></script>
+</html>

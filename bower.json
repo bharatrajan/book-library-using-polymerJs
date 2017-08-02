@@ -1,0 +1,29 @@
+{
+  "name": "book-library",
+  "description": "Book library app built with polymer JS",
+  "main": "gulpfile.js",
+  "authors": [
+    "Bharat Rajan"
+  ],
+  "license": "ISC",
+  "homepage": "index.html",
+  "ignore": [],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.9.1",
+    "iron-ajax": "PolymerElements/iron-ajax#~1.1.1",
+    "web-component-tester": "Polymer/web-component-tester#^4.2.1"
+  },
+  "devDependencies": {
+    "web-component-tester": "^4.0.0",
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "chai-dom": "^1.4.3",
+    "paper-spinner": "^1.0.0"
+  },
+  "resolutions": {
+    "polymer": "^1.2.4",
+    "xc-styles": "v0.1.0",
+    "iron-flex-layout": "~1.2.2",
+    "paper-spinner": "^1.0.0",
+    "webcomponentsjs": "^v1.0.2"
+  }
+}

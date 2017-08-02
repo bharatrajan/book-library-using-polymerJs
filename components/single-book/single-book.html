@@ -68,14 +68,14 @@
     </style>
 
     <div class="book" id$="book-{{dataBookObject.id}}">
-      <div class=$"book-top {{selectStatus}}">
+      <div class$="book-top {{selectStatus}}">
         <div
           class="book-cover"
-          onClick$="{{_onClickHandler}}"
+          on-click="_onClickHandler"
           style$="width:128px; height:193px; background: url('{{imageLink}}');"
          ></div>
         <div class="book-shelf-changer">
-          <select onChange$={{onShelfChange}} defaultValue$={{dataBookObject.shelf}}>
+          <select on-change="onShelfChange" defaultValue$="{{dataBookObject.shelf}}">
             <option value="none" disabled>Move to...</option>
             <option value="currentlyReading">Currently Reading</option>
             <option value="wantToRead">Want to Read</option>
@@ -104,7 +104,9 @@
 
         dataBookObject : {
           type: Object,
+          reflectToAttribute: false,
           observer: "_propChangeObserver"
+        }
       },
 
       _propChangeObserver: function(bookObject){
@@ -136,7 +138,10 @@
       },
 
       onShelfChange: function(event) {
-        console.log("event", event)
+        this.fire("onBookShelfChanged", {
+          "newShelf" : event.target.value,
+          "bookId": this.dataBookObject.id
+        })
       }
 
     });
