@@ -1,7 +1,6 @@
 {
-  "verbose": true,
   "plugins": {
-    "local": {
+    "sauce": {
       "browsers": ["chrome"]
     }
   }
