@@ -28,9 +28,15 @@
     <link rel="stylesheet" type="text/css" href="../../app.css"/>
   </head>
   <body>
-      <main-app></main-app>
+      <template is="dom-bind">
+        <app-location use-hash-as-path route="{{route}}"></app-location>
+        <iron-pages selected="[[route.path]]" attr-for-selected="name">
+          <book-listing name="list" route="{{subroute}}"></book-listing>
+          <book-lookup name="search" route="{{subroute}}"></book-lookup>
+        </iron-pages>
+      </template>
   </body>
   <script>
-    window.location = "/#list";
+    window.location = location.hash || "/#list";
   </script>
 </html>
