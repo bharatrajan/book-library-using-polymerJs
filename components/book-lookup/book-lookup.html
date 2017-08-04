@@ -110,21 +110,17 @@
     },
 
     _updateToContinueReading: function() {
-      this._update("currentlyReading");
+      this.BooksApi.bulkUpdate(this.selectedBookList, "currentlyReading");
+      this._showBookListing();
     },
 
     _updateToWantToRead: function() {
-      this._update("wantToRead");
+      this.BooksApi.bulkUpdate(this.selectedBookList, "wantToRead");
+      this._showBookListing();
     },
 
     _updateToRead: function() {
-      this._update("read");
-    },
-
-    _update: function(newShelf){
-      for(var bookid in this.selectedBookList)
-        if(this.selectedBookList[bookid])
-           this.BooksApi.updateBook(bookid, newShelf);
+      this.BooksApi.bulkUpdate(this.selectedBookList, "read");
       this._showBookListing();
     },
 
@@ -133,7 +129,6 @@
       this.set("searchResults", []);
       this.BooksApi = new BooksApi({});
       this.appendChild(this.BooksApi);
-      this.BooksApi.getAllBooks();
     },
 
     onSearchSuccess: function(event, detail){
@@ -151,6 +146,7 @@
     },
 
     _showBookListing: function(){
+      //this.fire("refreshList");
       this.appRouter.set("route.path", "list");
     },
 
