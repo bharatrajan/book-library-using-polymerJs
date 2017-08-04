@@ -29,10 +29,10 @@
   </head>
   <body>
       <template is="dom-bind">
-        <app-location use-hash-as-path route="{{route}}"></app-location>
+        <app-location use-hash-as-path route="{{route}}" id="viewSwitch"></app-location>
         <iron-pages selected="[[route.path]]" attr-for-selected="name">
-          <book-listing name="list" route="{{subroute}}"></book-listing>
-          <book-lookup name="search" route="{{subroute}}"></book-lookup>
+          <book-listing name="list" ></book-listing>
+          <book-lookup name="search" ></book-lookup>
         </iron-pages>
       </template>
   </body>

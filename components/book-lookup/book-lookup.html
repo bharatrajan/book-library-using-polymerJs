@@ -129,6 +129,7 @@
     },
 
     attached: function() {
+      this.appRouter = document.getElementById("viewSwitch");
       this.set("searchResults", []);
       this.BooksApi = new BooksApi({});
       this.appendChild(this.BooksApi);
@@ -150,7 +151,7 @@
     },
 
     _showBookListing: function(){
-        //TODO : change view
+      this.appRouter.set("route.path", "list");
     },
 
     onBookShelfChanged: function(event, detail){
