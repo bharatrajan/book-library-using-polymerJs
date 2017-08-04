@@ -6,7 +6,86 @@
     :host {
 
     }
-
+    .search-suggestions {
+        padding: 100px 25px;
+        color: rgba(128, 128, 128, 0.65);
+    }
+    .bulk-update {
+        min-width: 78px;
+        padding-top: 65px;
+        display: flex;
+        justify-content: space-around;
+        text-align: center;
+        color: #FFF;
+        position: fixed;
+        z-index: 1;
+        width: 100%;
+        background: #EBEEF0;
+    }
+    .bulk-update-option {
+        font-family: RalewayEL;
+        display: grid;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: pointer;
+        width: 33.33%;
+        border-radius: 10px;
+        background-color: #0272B6;
+        padding: 20px 0px;
+        margin: 5px;
+        font-size: 20px;
+    }
+    .add-to {
+        font-family: Raleway;
+        font-size: 12.5px;
+        font-weight: bolder;
+    }
+    .bulk-update-option:active {
+        opacity: 0.8;
+    }
+    .search-books-bar {
+        position: fixed;
+        background: white !important;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 5;
+        display: flex;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 0 6px rgba(0, 0, 0, 0.23);
+    }
+    .search-books-input-wrapper {
+        flex: 1;
+        background: #e9e;
+        font-family: RalewayEL !important;
+    }
+    .search-books-bar input {
+        width: 100%;
+        padding: 15px 10px;
+        font-size: 1.25em;
+        border: none;
+        outline: none;
+    }
+    .close-search {
+        display: block;
+        top: 20px;
+        left: 15px;
+        width: 50px;
+        height: 53px;
+        background: white;
+        background-image: url('./../../icons/arrow-back.svg');
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 28px;
+        font-size: 0;
+    }
+    .search-books-results {
+        background-color: #EBEEF0;
+        padding: 200px 10px 20px;
+    }
   </style>
 
       <div class="search-books">
