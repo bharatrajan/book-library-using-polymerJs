@@ -167,11 +167,18 @@
     },
 
     listeners: {
+      "refreshList": "_cleanUp",
+
       "ONSELECTED": "onBookSelected",
       "ONUNSELECTED": "onBookUnselected",
       "onSearchSuccess": "onSearchSuccess",
       "onUpdateSuccess" : "onUpdateSuccess",
       "onBookShelfChanged": "onBookShelfChanged"
+    },
+
+    _cleanUp: function(){
+        this.set("userInput", "");
+        this.set("selectedBookList", {});
     },
 
     onBookSelected: function(event, detail){
