@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <link rel="import" href="../../../../../bower_components/polymer/polymer.html"/>
+    <script src="../../../../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../../app.css"/>
+
+    <link rel="import" href="../../single-book/single-book.html"/>
+    <link rel="import" href="../book-shelf.html"/>
+
+    <script src="../../../../../bower_components/chai-dom/chai-dom.js"></script>
+    <script src="../../../../../bower_components/web-component-tester/browser.js"></script>
+  </head>
+  <body>
+    <test-fixture id="book-shelf-fixture">
+      <template>
+        <book-shelf id="bookShelf1" data-title="Continue Reading"></book-shelf>
+      </template>
+    </test-fixture>
+  </body>
+  <script src="js/test.js"></script>
+</html>

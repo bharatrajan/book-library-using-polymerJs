@@ -1,5 +1,5 @@
 suite('<single-book>', function() {
-  var sbFixture, localTestData =  {
+  var bookShelfFixture, localTestData =  [{
         "title": "Drama",
         "authors": [
           "Raina Telgemeier"
@@ -44,36 +44,54 @@ suite('<single-book>', function() {
         "infoLink": "https://play.google.com/store/books/details?id=1w4fAwAAQBAJ&source=gbs_api",
         "canonicalVolumeLink": "https://market.android.com/details?id=book-1w4fAwAAQBAJ",
         "id": "1w4fAwAAQBAJ",
-        "shelf": "none"
-      };
+        "shelf": "continueReading"
+      }];
 
 
   setup(function(){
-        sbFixture = fixture('single-book-fixture');
-        sbFixture.set("dataBookObject", localTestData);
+        bookShelfFixture = fixture('book-shelf-fixture');
   });
 
   //########################  Exist & Attached  ########################
   test('Is exist', function() {
-      expect(sbFixture).to.exist;
+      bookShelfFixture.set("bookList", localTestData);
+      expect(bookShelfFixture).to.exist;
   });
 
   test('Is Attached', function() {
-      assert.isTrue(sbFixture.isAttached);
+      bookShelfFixture.set("bookList", localTestData);
+      assert.isTrue(bookShelfFixture.isAttached);
   });
 
-  test('Book title match', function() {
-      var bookTitle = sbFixture.querySelector('.book-title').innerText;
-      assert.equal(bookTitle, 'Drama', 'Book title matched');
+  test('Book-shelf title match', function(done) {
+      bookShelfFixture.set("bookList", localTestData);
+      setTimeout(function() {
+        var bookTitle = bookShelfFixture.querySelector('.bookshelf-title').innerText;
+        assert.equal(bookTitle, 'Continue Reading', 'Book-shelf title matched');
+        done();
+      }, 100, done);
   });
 
-  test('Book shelf match', function() {
-      var selectedIndex = sbFixture.querySelector('select').selectedIndex;
-      assert.equal(selectedIndex, 4, 'Book shelf matched');
+  test('Is Number of books matches to 1', function(done) {
+      bookShelfFixture.set("bookList", localTestData);
+      setTimeout(function() {
+        var olElement = bookShelfFixture.querySelector('ol');
+        var liElement = bookShelfFixture.querySelectorAll('li');
+        assert.equal(liElement.length, 1, "Number of books matches");
+        done();
+      }, 100, done);
   });
 
-  test('Book title match', function() {
-      var bookAuthors = sbFixture.querySelector('.book-authors').innerText;
-      assert.equal(bookAuthors, 'Raina Telgemeier', 'Book authors matched');
+  test('Is Number of books matches to 0', function() {
+      bookShelfFixture.set("bookList", []);
+      var olElement = bookShelfFixture.querySelector('ol');
+      var liElement = bookShelfFixture.querySelectorAll('li');
+      assert.equal(liElement.length, 0, "Number of books matches");
   });
+
+  test('Book shelf hides itself on empty list', function() {
+      bookShelfFixture.set("bookList", []);
+      assert.isTrue(bookShelfFixture.hidden);
+  });
+
 });
