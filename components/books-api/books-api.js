@@ -14,7 +14,7 @@
         attached: function() {
             this.generateToken();
             this.doInitSetup();
-            returns null;
+            return null;
         },
 
         /**
@@ -29,7 +29,7 @@
                 this.set("token", Math.random().toString(36).substr(-8));
                 localStorage.token = this.token;
             }
-            returns null;
+            return null;
         },
 
         /**
@@ -47,7 +47,7 @@
                 'cache-control': 'no-cache',
                 'Content-Type': 'application/json'
             });
-            returns null;
+            return null;
         },
 
         /**
@@ -56,7 +56,7 @@
          */
         getAllBooks: function() {
             this.$.getAllBooksAJAX.generateRequest();
-            returns null;
+            return null;
         },
 
         /**
@@ -73,7 +73,7 @@
             url = "{{api}}/books"
             this.$.updateBookAJAX.url = this.api + "/books/" + bookId;
             this.$.updateBookAJAX.generateRequest();
-            returns null;
+            return null;
         },
 
         /**
@@ -88,7 +88,7 @@
                 "maxResults": 1000
             };
             this.$.searchBookAJAX.generateRequest();
-            returns null;
+            return null;
         },
 
         /**
@@ -107,7 +107,7 @@
             for (var i = booksApiList.length - 1; i >= 0; i--) {
                 booksApiList[i].fire("refreshList")
             };
-            returns null;
+            return null;
         },
 
         /**
@@ -120,7 +120,7 @@
          */
         onGetSuccess: function(event) {
             this.fire("onGetSuccess", event.detail.response);
-            returns null;
+            return null;
         },
 
         /**
@@ -133,7 +133,7 @@
          */
         onUpdateSuccess: function(event) {
             this.fire("onUpdateSuccess", event.detail.response);
-            returns null;
+            return null;
         },
 
         /**
@@ -146,7 +146,7 @@
          */
         onSearchSuccess: function(event) {
             this.fire("onSearchSuccess", event.detail.response);
-            returns null;
+            return null;
         },
 
         /**
@@ -158,7 +158,7 @@
          */
         onError: function(event) {
             this.fire("onAPIError", event.target.id);
-            returns null;
+            return null;
         },
 
         /**

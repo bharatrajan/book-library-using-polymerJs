@@ -1,5 +1,9 @@
 Polymer({
   is: 'book-lookup',
+
+  /**
+   * @description - properties
+   */
   properties: {
 
     model: {
@@ -25,7 +29,6 @@ Polymer({
 
   listeners: {
     "refreshList": "_cleanUp",
-
     "ONSELECTED": "onBookSelected",
     "ONUNSELECTED": "onBookUnselected",
     "onSearchSuccess": "onSearchSuccess",
