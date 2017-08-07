@@ -69,8 +69,8 @@
         updateBook: function(bookId, newShelf) {
             this.$.updateBookAJAX.body = {
                 "shelf": newShelf
-            }
-            url = "{{api}}/books"
+            };
+            url = "{{api}}/books";
             this.$.updateBookAJAX.url = this.api + "/books/" + bookId;
             this.$.updateBookAJAX.generateRequest();
             return null;
@@ -105,7 +105,7 @@
             }
             var booksApiList = document.getElementsByTagName('Books-api');
             for (var i = booksApiList.length - 1; i >= 0; i--) {
-                booksApiList[i].fire("refreshList")
+                booksApiList[i].fire("refreshList");
             };
             return null;
         },
