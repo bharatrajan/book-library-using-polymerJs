@@ -162,12 +162,9 @@
         },
 
         /**
-         * @description - Set props to parent
-         * @description - Binds "this" inside "onCatagoryChange"
-         * @constructor || eventListener || lifeCycle || callBack
-         * @param {object} arg1 - attributes sent from parent
-         * @param {boolean} arg2 - yay or nay
-         * @returns this
+         * @description - Factory implementation
+         * @param {object} initObj - Any field from initObj will be set to properties
+         * @returns BooksApi
          */
         factoryImpl: function(initObj) {
             for (var property in initObj)

@@ -63,7 +63,7 @@ Polymer({
      * @description - Injects the selected book into selectedBookList object
      * @eventListener
      * @param {object} event - ONSELECTED event object
-     * @param {boolean} detail - Additional detail from same event
+     * @param {object} detail - Additional detail from same event
      * @returns null
      */
     onBookSelected: function(event, detail) {
@@ -77,7 +77,7 @@ Polymer({
      * @description - Removes the unselected book from selectedBookList object
      * @eventListener
      * @param {object} event - ONUNSELECTED event object
-     * @param {boolean} detail - Additional detail from same event
+     * @param {object} detail - Additional detail from same event
      * @returns null
      */
     onBookUnselected: function(event, detail) {
@@ -157,7 +157,7 @@ Polymer({
      * @description - Computes show/hide for various local elements
      * @eventListener
      * @param {object} event - onSearchSuccess event
-     * @param {boolean} detail - Additional detail from onSearchSuccess event
+     * @param {object} detail - Additional detail from onSearchSuccess event
      * @returns null
      */
     onSearchSuccess: function(event, detail) {
@@ -176,7 +176,7 @@ Polymer({
      * @description - Calls _showBookListing & Cleans this component
      * @eventListener
      * @param {object} event - onUpdateSuccess event
-     * @param {boolean} detail - Additional detail from onUpdateSuccess event
+     * @param {object} detail - Additional detail from onUpdateSuccess event
      * @returns null
      */
     onUpdateSuccess: function(event, detail) {
@@ -200,7 +200,7 @@ Polymer({
      * @description - Wrapper for BooksApi.updateBook
      * @eventListener
      * @param {object} event - onBookShelfChanged event
-     * @param {boolean} detail - Additional data from onBookShelfChanged event
+     * @param {object} detail - Additional data from onBookShelfChanged event
      * @returns null
      */
     onBookShelfChanged: function(event, detail) {

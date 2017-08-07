@@ -1,46 +1,41 @@
 <dom-module id="books-api">
-
-  <template>
-
-    <style>
-      :host {
-        display: none;
-      }
-    </style>
-    <iron-ajax  id="getAllBooksAJAX"
-                content-type="application/json"
-                url="{{api}}/books"
-                handle-as="json"
-                timeout=8000
-                headers={{headers}}
-                with-credentials
-                on-response="onGetSuccess"
-                on-error="onError">
-    </iron-ajax>
-    <iron-ajax  id="updateBookAJAX"
-                content-type="application/json"
-                method="PUT"
-                handle-as="json"
-                timeout=8000
-                headers={{headers}}
-                with-credentials
-                on-response="onUpdateSuccess"
-                on-error="onError">
-    </iron-ajax>
-    <iron-ajax  id="searchBookAJAX"
-                content-type="application/json"
-                url="{{api}}/search"
-                method="POST"
-                handle-as="json"
-                timeout=8000
-                headers={{headers}}
-                with-credentials
-                on-response="onSearchSuccess"
-                on-error="onError">
-    </iron-ajax>
-
-  </template>
-
-  <script src="books-api.js">  </script>
-
+   <template>
+      <style>
+         :host {
+         display: none;
+         }
+      </style>
+      <iron-ajax  id="getAllBooksAJAX"
+         content-type="application/json"
+         url="{{api}}/books"
+         handle-as="json"
+         timeout=8000
+         headers={{headers}}
+         with-credentials
+         on-response="onGetSuccess"
+         on-error="onError">
+      </iron-ajax>
+      <iron-ajax  id="updateBookAJAX"
+         content-type="application/json"
+         method="PUT"
+         handle-as="json"
+         timeout=8000
+         headers={{headers}}
+         with-credentials
+         on-response="onUpdateSuccess"
+         on-error="onError">
+      </iron-ajax>
+      <iron-ajax  id="searchBookAJAX"
+         content-type="application/json"
+         url="{{api}}/search"
+         method="POST"
+         handle-as="json"
+         timeout=8000
+         headers={{headers}}
+         with-credentials
+         on-response="onSearchSuccess"
+         on-error="onError">
+      </iron-ajax>
+   </template>
+   <script src="books-api.js">  </script>
 </dom-module>

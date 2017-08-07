@@ -1,145 +1,125 @@
 <dom-module id="book-lookup">
-
-<template>
-
-  <style>
-    :host {
-
-    }
-    .search-suggestions {
-        padding: 100px 25px;
-        color: rgba(128, 128, 128, 0.65);
-    }
-    .bulk-update {
-        min-width: 78px;
-        padding-top: 65px;
-        display: flex;
-        justify-content: space-around;
-        text-align: center;
-        color: #FFF;
-        position: fixed;
-        z-index: 1;
-        width: 100%;
-        background: #fff;
-    }
-    .bulk-update-option {
-        font-family: RalewayEL;
-        display: grid;
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        -khtml-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-        cursor: pointer;
-        width: 33.33%;
-        border-radius: 10px;
-        background-color: #37474F;
-        padding: 20px 0px;
-        margin: 5px;
-        font-size: 20px;
-    }
-    .add-to {
-        font-family: Raleway;
-        font-size: 12.5px;
-        font-weight: bolder;
-    }
-    .bulk-update-option:active {
-        opacity: 0.8;
-    }
-    .search-books-bar {
-        position: fixed;
-        background: white !important;
-        width: 100%;
-        top: 0;
-        left: 0;
-        z-index: 5;
-        display: flex;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 0 6px rgba(0, 0, 0, 0.23);
-    }
-    .search-books-input-wrapper {
-        flex: 1;
-        background: #e9e;
-        font-family: RalewayEL !important;
-    }
-    .search-books-bar input {
-        width: 100%;
-        padding: 15px 10px;
-        font-size: 1.25em;
-        border: none;
-        outline: none;
-    }
-    .close-search {
-        display: block;
-        top: 20px;
-        left: 15px;
-        width: 50px;
-        height: 53px;
-        background: white;
-        background-image: url('./../../icons/arrow-back.svg');
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: 28px;
-        font-size: 0;
-    }
-    .search-books-results {
-        background-color: #fff;
-        padding: 200px 10px 20px;
-    }
-  </style>
-
-      <div class="search-books">
-        <div class="search-books-bar">
-          <a href="/#list" class="close-search">Close</a>
-          <div class="search-books-input-wrapper">
-            <paper-input
-              style="background: white !important;"
-              type="text"
-              value="{{userInput}}"
-              id="paperInput"
-              placeholder="Search by title or author">
-            </paper-input>
+    <template>
+        <style>
+            :host {} .search-suggestions {
+                padding: 100px 25px;
+                color: rgba(128, 128, 128, 0.65);
+            }
+            .bulk-update {
+                min-width: 78px;
+                padding-top: 65px;
+                display: flex;
+                justify-content: space-around;
+                text-align: center;
+                color: #FFF;
+                position: fixed;
+                z-index: 1;
+                width: 100%;
+                background: #fff;
+            }
+            .bulk-update-option {
+                font-family: RalewayEL;
+                display: grid;
+                -webkit-touch-callout: none;
+                -webkit-user-select: none;
+                -khtml-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
+                user-select: none;
+                cursor: pointer;
+                width: 33.33%;
+                border-radius: 10px;
+                background-color: #37474F;
+                padding: 20px 0px;
+                margin: 5px;
+                font-size: 20px;
+            }
+            .add-to {
+                font-family: Raleway;
+                font-size: 12.5px;
+                font-weight: bolder;
+            }
+            .bulk-update-option:active {
+                opacity: 0.8;
+            }
+            .search-books-bar {
+                position: fixed;
+                background: white !important;
+                width: 100%;
+                top: 0;
+                left: 0;
+                z-index: 5;
+                display: flex;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.19), 0 0 6px rgba(0, 0, 0, 0.23);
+            }
+            .search-books-input-wrapper {
+                flex: 1;
+                background: #e9e;
+                font-family: RalewayEL !important;
+            }
+            .search-books-bar input {
+                width: 100%;
+                padding: 15px 10px;
+                font-size: 1.25em;
+                border: none;
+                outline: none;
+            }
+            .close-search {
+                display: block;
+                top: 20px;
+                left: 15px;
+                width: 50px;
+                height: 53px;
+                background: white;
+                background-image: url('./../../icons/arrow-back.svg');
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: 28px;
+                font-size: 0;
+            }
+            .search-books-results {
+                background-color: #fff;
+                padding: 200px 10px 20px;
+            }
+        </style>
+        <div class="search-books">
+            <div class="search-books-bar">
+                <a href="/#list" class="close-search">Close</a>
+                <div class="search-books-input-wrapper">
+                    <paper-input style="background: white !important;" type="text" value="{{userInput}}" id="paperInput" placeholder="Search by title or author">
+                    </paper-input>
+                </div>
+            </div>
+            <div class="search-suggestions" hidden$="[[model.hideSuggestion]]">
+                <span> Popular search terms are . . .
+            <br/>
+            React, iOS & Android </span>
+            </div>
+            <div class="bulk-update" hidden$="[[model.hideButtons]]">
+                <div class="bulk-update-option" on-click="_updateToContinueReading">
+                    <span class="add-to">Add to . . .</span>
+                    <span>Continue Reading</span>
+                </div>
+                <div class="bulk-update-option" on-click="_updateToWantToRead">
+                    <span class="add-to">Add to . . .</span>
+                    <span>Want to Read</span>
+                </div>
+                <div class="bulk-update-option" on-click="_updateToRead">
+                    <span class="add-to">Add to . . .</span>
+                    <span>Read</span>
+                </div>
+            </div>
+            <div class="search-books-results" hidden$="[[model.hideResults]]">
+                <ol class="books-grid">
+                    <template is="dom-repeat" items="{{model.searchResults}}" as="singleBookData">
+                        <li id$={{bookItem.id}}>
+                            <single-book is-multi-selectable data-book-object="[[singleBookData]]">
+                                </ <single-book>
+                        </li>
+                    </template>
+                </ol>
+            </div>
         </div>
-      </div>
-
-      <div class="search-suggestions" hidden$="[[model.hideSuggestion]]">
-        <span> Popular search terms are . . .
-               <br/>
-               React, iOS & Android </span>
-      </div>
-
-
-      <div class="bulk-update" hidden$="[[model.hideButtons]]">
-        <div class="bulk-update-option"
-             on-click="_updateToContinueReading">
-          <span class="add-to">Add to . . .</span>
-          <span>Continue Reading</span>
-        </div>
-        <div class="bulk-update-option"
-             on-click="_updateToWantToRead">
-          <span class="add-to">Add to . . .</span>
-          <span>Want to Read</span>
-        </div>
-        <div class="bulk-update-option"
-             on-click="_updateToRead">
-          <span class="add-to">Add to . . .</span>
-          <span>Read</span>
-        </div>
-      </div>
-
-      <div class="search-books-results" hidden$="[[model.hideResults]]">
-        <ol class="books-grid">
-          <template is="dom-repeat" items="{{model.searchResults}}" as="singleBookData">
-            <li id$={{bookItem.id}}>
-                <single-book is-multi-selectable data-book-object="[[singleBookData]]"></<single-book>
-            </li>
-          </template>
-        </ol>
-      </div>
-  </div>
-
-</template>
-
-<script src="book-lookup.js"></script>
-
+    </template>
+    <script src="book-lookup.js"></script>
 </dom-module>

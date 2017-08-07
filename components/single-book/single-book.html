@@ -1,106 +1,96 @@
 <dom-module id="single-book">
-
-  <template>
-
-    <style>
-        :host {} .book {
-            width: 140px;
-        }
-        .book-title,
-        .book-authors {
-            font-size: 0.8em;
-        }
-        .book-title {
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .book-authors {
-            color: #999;
-        }
-        .book-top.SELECTED {
-            border-radius: 6px;
-            background-color: #1e88e5;
-        }
-        .book-top {
-            position: relative;
-            height: 204px;
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
-            -webkit-box-align: end;
-            -ms-flex-align: end;
-            align-items: center;
-            justify-content: center;
-            -webkit-align-items: center;
-            -webkit-justify-content: center;
-            -ms-align-items: center;
-            -ms-justify-content: center;
-        }
-        .book-cover {
-            background-repeat: round !important;
-            background-size: cover !important;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-            background: #eee;
-        }
-        .book-cover-title {
-            padding: 20px 10px 0;
-            text-align: center;
-            font-size: 0.8em;
-        }
-        .book-shelf-changer {
-            position: absolute;
-            right: 0;
-            bottom: -10px;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: rgba(245, 0, 87, 0.8);
-            background-image: url('../../icons/arrow-drop-down.svg');
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: 20px;
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-        }
-        .book-shelf-changer select {
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-        .book-cover {
-            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-            background: #eee;
-        }
-        .book-cover-title {
-            padding: 20px 10px 0;
-            text-align: center;
-            font-size: 0.8em;
-        }
-    </style>
-
-    <div class="book" id$="book-{{dataBookObject.id}}">
-      <div class$="book-top {{selectStatus}}">
-        <div
-          class="book-cover"
-          on-click="_onClickHandler"
-          style$="width:128px; height:193px; background: url('{{imageLink}}');"
-         ></div>
-        <div class="book-shelf-changer">
-          <select on-change="onShelfChange">
-            <option value="none" disabled>Move to...</option>
-            <option class="enabledOption" value="currentlyReading">Currently Reading</option>
-            <option class="enabledOption" value="wantToRead">Want to Read</option>
-            <option class="enabledOption" value="read">Read</option>
-            <option class="enabledOption" value="none">None</option>
-          </select>
+    <template>
+        <style>
+            :host {} .book {
+                width: 140px;
+            }
+            .book-title,
+            .book-authors {
+                font-size: 0.8em;
+            }
+            .book-title {
+                font-weight: bold;
+                margin-top: 10px;
+            }
+            .book-authors {
+                color: #999;
+            }
+            .book-top.SELECTED {
+                border-radius: 6px;
+                background-color: #1e88e5;
+            }
+            .book-top {
+                position: relative;
+                height: 204px;
+                display: -webkit-box;
+                display: -ms-flexbox;
+                display: flex;
+                -webkit-box-align: end;
+                -ms-flex-align: end;
+                align-items: center;
+                justify-content: center;
+                -webkit-align-items: center;
+                -webkit-justify-content: center;
+                -ms-align-items: center;
+                -ms-justify-content: center;
+            }
+            .book-cover {
+                background-repeat: round !important;
+                background-size: cover !important;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+                background: #eee;
+            }
+            .book-cover-title {
+                padding: 20px 10px 0;
+                text-align: center;
+                font-size: 0.8em;
+            }
+            .book-shelf-changer {
+                position: absolute;
+                right: 0;
+                bottom: -10px;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                background: rgba(245, 0, 87, 0.8);
+                background-image: url('../../icons/arrow-drop-down.svg');
+                background-repeat: no-repeat;
+                background-position: center;
+                background-size: 20px;
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            }
+            .book-shelf-changer select {
+                width: 100%;
+                height: 100%;
+                opacity: 0;
+                cursor: pointer;
+            }
+            .book-cover {
+                box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+                background: #eee;
+            }
+            .book-cover-title {
+                padding: 20px 10px 0;
+                text-align: center;
+                font-size: 0.8em;
+            }
+        </style>
+        <div class="book" id$="book-{{dataBookObject.id}}">
+            <div class$="book-top {{selectStatus}}">
+                <div class="book-cover" on-click="_onClickHandler" style$="width:128px; height:193px; background: url('{{imageLink}}');"></div>
+                <div class="book-shelf-changer">
+                    <select on-change="onShelfChange">
+                        <option value="none" disabled>Move to...</option>
+                        <option class="enabledOption" value="currentlyReading">Currently Reading</option>
+                        <option class="enabledOption" value="wantToRead">Want to Read</option>
+                        <option class="enabledOption" value="read">Read</option>
+                        <option class="enabledOption" value="none">None</option>
+                    </select>
+                </div>
+            </div>
+            <div class="book-title">{{dataBookObject.title}}</div>
+            <div class="book-authors">{{authorList}}</div>
         </div>
-      </div>
-      <div class="book-title">{{dataBookObject.title}}</div>
-      <div class="book-authors">{{authorList}}</div>
-    </div>
-
-  </template>
-
-  <script src="single-book.js"></script>
-
+    </template>
+    <script src="single-book.js"></script>
 </dom-module>
