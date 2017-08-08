@@ -1,0 +1,4 @@
+applications:
+- name: bharatLibrary
+  random-route: true
+  memory: 256M
