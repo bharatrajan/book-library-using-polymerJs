@@ -8,7 +8,7 @@
   },
   "scripts": {
     "test": "wct",
-    "start": "node server/server.js"
+    "start": "source start.sh"
   },
   "repository": {
     "type": "git",
@@ -21,18 +21,13 @@
   },
   "homepage": "https://github.com/bharatrajan/book-library-using-polymerJs#readme",
   "devDependencies": {
-    "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
     "cors": "^2.8.4",
     "express": "^4.15.3",
-    "express-http-proxy": "^1.0.6",
     "fs": "0.0.1-security",
     "promise": "^8.0.1",
-    "sys": "0.0.1",
-    "wct-sauce": "^1.8.6"
+    "sys": "0.0.1"
   },
   "dependencies": {
-    "firebase": "^4.2.0",
-    "firebase-tools": "^3.9.2"
   }
 }
