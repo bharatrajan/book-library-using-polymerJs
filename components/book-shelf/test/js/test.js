@@ -1,4 +1,4 @@
-suite('<single-book>', function() {
+suite('<book-shelf>', function() {
   var bookShelfFixture, localTestData =  [{
         "title": "Drama",
         "authors": [
