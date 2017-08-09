@@ -1,4 +1,5 @@
+---
 applications:
-- name: bharatLibrary
-  random-route: true
-  memory: 256M
+ - name: bharatLibraryUsingPolymer
+   random-route: true
+   memory: 128M
