@@ -1,10 +1,9 @@
+'use strict';
 var gulp = require('gulp');
-var connect = require('gulp-connect');
+var vulcanize  = require('gulp-vulcanize');
+var inlinesource = require('gulp-inline');
+var cachebust = require('gulp-cache-bust');
+var minifyInline = require('gulp-minify-inline');
+var htmlclean = require('gulp-htmlclean');
 
-gulp.task('connect', function() {
-  connect.server({
-    port : 3001,
-    livereload: true,
-    root: './'
-  });
-});
+var ts = new Date().getTime();

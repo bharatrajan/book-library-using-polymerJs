@@ -16,7 +16,7 @@ readFile("full_book_list.json", "utf8")
 });
 
 //Static content rendering
-app.use(express.static("./app"));
+app.use(express.static("./build"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
