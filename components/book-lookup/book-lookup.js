@@ -99,6 +99,33 @@ Polymer({
     },
 
     /**
+     * @description - Takes bookList and check for null
+     * @description - If Empty, throws an alert message
+     * @validation
+     * @param {object} selectedBookList - List of books selected for bulk update
+     * @returns boolean isEmpty or not
+     */
+    isSelectedBookListEmpty : function( selectedBookList ) {
+      var isEmpty = true;
+      //check for Empty object
+      for(var bookId in selectedBookList)
+        if(typeof bookId !== "undefined"){
+           isEmpty = false;
+           break;
+        }
+
+      //throws alertbox
+      if(isEmpty){
+        this.importHref("../lazyload-elements.html", function() {
+          window.emptyBookListAlertBox.hidden = false;
+          window.emptyBookListAlertBox.open();
+        })
+       }
+
+      return isEmpty;
+    },
+
+    /**
      * @description - Called when user hits "Continue Reading" button
      * @description - Updates all the books in selectedBookList to "Continue Reading" shelf
      * @description - calls _showBookListing to show updated list
@@ -106,6 +133,7 @@ Polymer({
      * @returns null
      */
     _updateToContinueReading: function() {
+        if(this.isSelectedBookListEmpty(this.selectedBookList)) return;
         this.BooksApi.bulkUpdate(this.selectedBookList, "currentlyReading");
         this._showBookListing();
         return null;
@@ -119,6 +147,7 @@ Polymer({
      * @returns null
      */
     _updateToWantToRead: function() {
+        if(this.isSelectedBookListEmpty(this.selectedBookList)) return;
         this.BooksApi.bulkUpdate(this.selectedBookList, "wantToRead");
         this._showBookListing();
         return null;
@@ -132,6 +161,7 @@ Polymer({
      * @returns null
      */
     _updateToRead: function() {
+        if(this.isSelectedBookListEmpty(this.selectedBookList)) return;
         this.BooksApi.bulkUpdate(this.selectedBookList, "read");
         this._showBookListing();
         return null;
@@ -139,7 +169,7 @@ Polymer({
 
     /**
      * @description - Initialize this.searchResults to []
-     * @description - Sets this.appRouter
+     * @description - Sets this.appRouter & alertbox
      * @description - Creates and attach booksAPI
      * @lifeCycle
      * @returns null
@@ -149,6 +179,11 @@ Polymer({
         this.set("searchResults", []);
         this.BooksApi = new BooksApi({});
         this.appendChild(this.BooksApi);
+
+        //setup alertbox
+        window.emptyBookListAlertBox = this.$.modal;
+        window.emptyBookListAlertBox.hidden = true;
+
         return null;
     },
 
