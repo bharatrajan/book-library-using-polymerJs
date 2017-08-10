@@ -94,7 +94,8 @@ Polymer({
      * @returns null
      */
     onUserType: function(userInput) {
-        this.BooksApi.searchBook(userInput);
+        if(this.BooksApi)
+          this.BooksApi.searchBook(userInput);
         return null;
     },
 
@@ -115,12 +116,7 @@ Polymer({
         }
 
       //throws alertbox
-      if(isEmpty){
-        this.importHref("../lazyload-elements.html", function() {
-          window.emptyBookListAlertBox.hidden = false;
-          window.emptyBookListAlertBox.open();
-        })
-       }
+      if(isEmpty) alert("Please select at least 1 book");
 
       return isEmpty;
     },
@@ -169,7 +165,7 @@ Polymer({
 
     /**
      * @description - Initialize this.searchResults to []
-     * @description - Sets this.appRouter & alertbox
+     * @description - Sets this.appRouter
      * @description - Creates and attach booksAPI
      * @lifeCycle
      * @returns null
@@ -179,10 +175,6 @@ Polymer({
         this.set("searchResults", []);
         this.BooksApi = new BooksApi({});
         this.appendChild(this.BooksApi);
-
-        //setup alertbox
-        window.emptyBookListAlertBox = this.$.modal;
-        window.emptyBookListAlertBox.hidden = true;
 
         return null;
     },

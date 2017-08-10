@@ -18,16 +18,6 @@ Polymer({
               "wantToReadList": [],
               "readList": []
           }
-        },
-
-        /**
-         * @description - Component's CSS-classList
-         * @description - Binding classList to properties
-         * @value : Object
-         */
-        class:{
-          type: String,
-          observer: "onPageBecomeActive"
         }
 
     },
@@ -38,27 +28,6 @@ Polymer({
         "onGetSuccess": "onGetSuccess",
         "onUpdateSuccess": "onUpdateSuccess",
         "onBookShelfChanged": "onBookShelfChanged"
-    },
-
-    /**
-     * @description - Called when this component's class changes.
-     * @description - If classList contains "iron-selected", this
-     * @description - view became active.
-     * @observer
-     * @param {string} classList - classList of this component
-     * @returns null
-     */
-    onPageBecomeActive: function(classList){
-      if(classList.indexOf("iron-selected") !== -1){//page became active
-
-        //Close alertbox from other views
-        if(window.emptyBookListAlertBox &&
-              window.emptyBookListAlertBox.close)
-                  window.emptyBookListAlertBox.close();
-
-      }
-
-      return null;
     },
 
     /**

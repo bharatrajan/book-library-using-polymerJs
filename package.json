@@ -20,6 +20,7 @@
     "test": "test"
   },
   "devDependencies": {
+    "del": "^3.0.0",
     "gulp": "^3.9.1",
     "gulp-cache-bust": "^1.1.0",
     "gulp-htmlclean": "^2.7.14",
