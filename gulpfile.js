@@ -6,6 +6,7 @@ var inlinesource = require('gulp-inline');
 var cachebust = require('gulp-cache-bust');
 var minifyInline = require('gulp-minify-inline');
 var htmlclean = require('gulp-htmlclean');
+var runSequence = require('run-sequence');
 
 //deletes /build
 gulp.task('cleanup', function(){
@@ -52,3 +53,10 @@ gulp.task('build-index', function(){
 
 gulp.task('default', ['cleanup']);
 gulp.task('build', ['move-fonts', 'move-icons', 'move-bower_components', 'move-components', 'build-index']);
+
+gulp.task('default', function(done) {
+    runSequence('cleanup', 'build', function() {
+        console.log('Build completed successfully');
+        done();
+    });
+});
