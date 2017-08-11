@@ -9,6 +9,8 @@
   },
   "scripts": {
     "test": "wct",
+    "build": "gulp",
+    "deploy": "cf push",  
     "start": "node go-live.js",
     "start-dev": "node server.js"
   },
