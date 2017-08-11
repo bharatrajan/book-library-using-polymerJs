@@ -12,6 +12,13 @@ This project contains the following functionalities
 - From the search results user can add a book to the above mentioned category
 - From the search results user can add more than 1 book to the above mentioned category, by bulk selecting
 
+## To start in local machine
+1. Clone the `master` branch
+2. cd `book-library-using-polymerJs`
+3. npm i
+4. bower i
+5. npm run start-dev
+
 ## Component placement
 ```
   <app-location/> <!-- From polymer -->
