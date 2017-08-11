@@ -110,7 +110,7 @@ Polymer({
       var isEmpty = true;
       //check for Empty object
       for(var bookId in selectedBookList)
-        if(typeof bookId !== "undefined"){
+        if(typeof selectedBookList[bookId] !== "undefined"){
            isEmpty = false;
            break;
         }
