@@ -30,6 +30,7 @@
     "xc-styles": "v0.1.0",
     "iron-flex-layout": "~1.2.2",
     "paper-spinner": "^1.0.0",
-    "webcomponentsjs": "^v1.0.2"
+    "webcomponentsjs": "^v1.0.2",
+    "paper-button": "^2.0.0"
   }
 }
