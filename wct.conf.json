@@ -1,12 +1,8 @@
 {
+  "verbose": true,
   "plugins": {
-    "sauce": {
-      "browsers": [
-        {
-          "browserName": "chrome",
-          "platform": "windows 10"
-        }
-      ]
+    "local": {
+      "browsers": ["chrome", "firefox"]
     }
   }
 }

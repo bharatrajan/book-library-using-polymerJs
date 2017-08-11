@@ -10,7 +10,7 @@
   "scripts": {
     "test": "wct",
     "build": "gulp",
-    "deploy": "cf push",  
+    "deploy": "cf push",
     "start": "node go-live.js",
     "start-dev": "node server.js"
   },
@@ -38,7 +38,8 @@
     "dotenv": "^4.0.0",
     "express": "^4.15.x",
     "fs": "0.0.1-security",
-    "promise": "^8.0.1"
+    "promise": "^8.0.1",
+    "web-component-tester": "^6.0.1"
   },
   "bugs": {
     "url": "https://github.com/bharatrajan/book-library-using-polymerJs/issues"
