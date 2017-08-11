@@ -1,0 +1,922 @@
+#%RAML 0.8
+title: Library
+
+baseUri: http://{target_server}/api/{version}
+protocols: [ HTTP, HTTPS ]
+mediaType: application/json
+version: v1
+documentation:
+  - title: Overview
+    content: |
+      This API allows users to manipulate book information for a library service.
+
+schemas:
+  - BaseSchema: |
+      {
+        "id": "http://{schemaserver}/base#",
+        "$schema": "http://json-schema.org/schema#",
+        "description": "Base Schema to extend types and other common functionality",
+        "definitions": {
+          "simpleType": {
+              "allOf" : [
+                  { "$ref": "http://json-schema.org/schema#/definitions/simpleType" },
+                  {
+                      "properties": {
+                          "uuid": {
+                            "type": "string",
+                            "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+                          },
+                          "date-time": {
+                            "type": "string",
+                            "pattern": "^(2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31)[T| ]?([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])(.[0-9]{1,3}[Z]?)?$"
+                          }
+                      }
+                  }
+              ]
+          }
+        }
+      }
+  - Response: |
+      {
+        "id": "http://{schemaserver}/rest/response#",
+        "$schema": "http://{schemaserver}/base",
+        "type": "object",
+        "properties": {
+          "status": {
+            "description": "The status code of the operation (corresponds to the HTTP code usually)",
+            "type": "integer"
+          },
+          "message": {
+            "description": "Human readable version of the message",
+            "type": "string"
+          },
+          "code": {
+            "description": "More specific application code if necessary",
+            "type": "integer"
+          },
+          "txId": {
+            "description": "The transaction ID associated with this request.",
+            "type": "uuid"
+          }
+
+        },
+        "required": [ "status" ]
+      }
+
+  - APIResponse: |
+      {
+        "id": "http://{schemaserver}/rest/apiResponse",
+        "$schema": "http://{schemaserver}/base",
+        "type": "object",
+        "properties": {
+          "response": { "$ref": "http://{schemaserver}/rest/response#" }
+        },
+        "required": [ "response" ]
+      }
+
+/books:
+  description: Library books
+  # Apply this to everything under books
+  is: [ error-producer ]
+
+  get:
+    description: |
+      Get all books in the system (no pagination).  If there are no books in
+      the system, the API will return an empty array
+
+    responses:
+      200:
+        description: Successful return of all books
+        body:
+          application/json:
+            schema: BooksResponse
+            example: |
+            {
+              "response": {
+                "status": 200,
+                "message": "success"
+              },
+              "books": [
+                {
+                  "title": "Android",
+                  "subtitle": "Earth Book One of the Android Saga",
+                  "authors": [
+                    "Paul J. Ward"
+                  ],
+                  "publisher": "Strategic Book Publishing",
+                  "publishedDate": "2012-11-01",
+                  "description": "Humans and androids are learning to co-exist as equals, but there are many opposers who seek to subvert their own creations and rule with absolute power ...Humans, with their android creations loyally at their side, have colonised the Moon and Mars. The Earth and Colonies Defence Service (ECDS) keeps the colonies and space lanes safe. On Earth, the Android Protectorate League, led by the enigmatic android leader Traviod Selius, campaign for android rights legislation. However, they are strongly opposed by the Anti-Android Faction (AAF). Following the approval of the Human and Android Cohabitation Act, ECDS Chief of Operations Nakaar Bacvor and co-conspirators form the military wing of the AAF. The AAF attack the Moon and Mars colonies, but are repulsed by ECDS forces. On Earth, with the AAF seemingly defeated, humans and androids unite to create the city of Utopia. Threats from a reformed, more powerful AAF emerges and the crew of the ECDS flagship Harmonia must formulate a defence. The mysterious Evolved Androids appear on Earth with a sytoid child called Eirini, who has strange powers. Utopian Enforcement officer Rul Calibra becomes her unlikely guardian and protector.Humankind's destiny hangs in the balance in the first series installment ANDROID: Earth - Book One of the ANDROID Saga. Paul J. Ward was born in 1969 in Lincolnshire, England, on the day of the historic Apollo 11 moon landing. He has been fascinated by space exploration and technological developments his whole life. This is his first novel. Publisher's website: http: //sbpra.com/PaulJWar",
+                  "industryIdentifiers": [
+                    {
+                      "type": "ISBN_13",
+                      "identifier": "9781618971241"
+                    },
+                    {
+                      "type": "ISBN_10",
+                      "identifier": "1618971247"
+                    }
+                  ],
+                  "readingModes": {
+                    "text": false,
+                    "image": false
+                  },
+                  "pageCount": 446,
+                  "printType": "BOOK",
+                  "categories": [
+                    "Fiction"
+                  ],
+                  "maturityRating": "NOT_MATURE",
+                  "allowAnonLogging": false,
+                  "contentVersion": "preview-1.0.0",
+                  "imageLinks": {
+                    "smallThumbnail": "http://books.google.com/books/content?id=xlp6NE2NWecC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                    "thumbnail": "http://books.google.com/books/content?id=xlp6NE2NWecC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                  },
+                  "language": "en",
+                  "previewLink": "http://books.google.com/books?id=xlp6NE2NWecC&printsec=frontcover&dq=android&hl=&cd=3&source=gbs_api",
+                  "infoLink": "http://books.google.com/books?id=xlp6NE2NWecC&dq=android&hl=&source=gbs_api",
+                  "canonicalVolumeLink": "https://books.google.com/books/about/Android.html?hl=&id=xlp6NE2NWecC",
+                  "id": "xlp6NE2NWecC",
+                  "shelf": "wantToRead"
+                }
+              ]
+            }
+
+  put:
+    description: Updates shelf
+    is: [ error-producer ]
+      /{bookId}:
+        description: Update the shelf of a particular book
+        uriParameters:
+          bookId:
+            description: The book ID
+            type: string
+            example: xlp6NE2NWecC
+         body:
+          application/json:
+             schema: Book
+              example: |
+               {
+                 "shelf": "Read"
+               }
+         responses:
+           200:
+             description: Successful return of updated book
+             body:
+               application/json:
+                 schema: BooksResponse
+                 example: |
+                 {
+                   "response": {
+                     "status": 200,
+                     "message": "success"
+                   },
+                   "books": [
+                     {
+                       "title": "Android",
+                       "subtitle": "Earth Book One of the Android Saga",
+                       "authors": [
+                         "Paul J. Ward"
+                       ],
+                       "publisher": "Strategic Book Publishing",
+                       "publishedDate": "2012-11-01",
+                       "description": "Humans and androids are learning to co-exist as equals, but there are many opposers who seek to subvert their own creations and rule with absolute power ...Humans, with their android creations loyally at their side, have colonised the Moon and Mars. The Earth and Colonies Defence Service (ECDS) keeps the colonies and space lanes safe. On Earth, the Android Protectorate League, led by the enigmatic android leader Traviod Selius, campaign for android rights legislation. However, they are strongly opposed by the Anti-Android Faction (AAF). Following the approval of the Human and Android Cohabitation Act, ECDS Chief of Operations Nakaar Bacvor and co-conspirators form the military wing of the AAF. The AAF attack the Moon and Mars colonies, but are repulsed by ECDS forces. On Earth, with the AAF seemingly defeated, humans and androids unite to create the city of Utopia. Threats from a reformed, more powerful AAF emerges and the crew of the ECDS flagship Harmonia must formulate a defence. The mysterious Evolved Androids appear on Earth with a sytoid child called Eirini, who has strange powers. Utopian Enforcement officer Rul Calibra becomes her unlikely guardian and protector.Humankind's destiny hangs in the balance in the first series installment ANDROID: Earth - Book One of the ANDROID Saga. Paul J. Ward was born in 1969 in Lincolnshire, England, on the day of the historic Apollo 11 moon landing. He has been fascinated by space exploration and technological developments his whole life. This is his first novel. Publisher's website: http: //sbpra.com/PaulJWar",
+                       "industryIdentifiers": [
+                         {
+                           "type": "ISBN_13",
+                           "identifier": "9781618971241"
+                         },
+                         {
+                           "type": "ISBN_10",
+                           "identifier": "1618971247"
+                         }
+                       ],
+                       "readingModes": {
+                         "text": false,
+                         "image": false
+                       },
+                       "pageCount": 446,
+                       "printType": "BOOK",
+                       "categories": [
+                         "Fiction"
+                       ],
+                       "maturityRating": "NOT_MATURE",
+                       "allowAnonLogging": false,
+                       "contentVersion": "preview-1.0.0",
+                       "imageLinks": {
+                         "smallThumbnail": "http://books.google.com/books/content?id=xlp6NE2NWecC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                         "thumbnail": "http://books.google.com/books/content?id=xlp6NE2NWecC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                       },
+                       "language": "en",
+                       "previewLink": "http://books.google.com/books?id=xlp6NE2NWecC&printsec=frontcover&dq=android&hl=&cd=3&source=gbs_api",
+                       "infoLink": "http://books.google.com/books?id=xlp6NE2NWecC&dq=android&hl=&source=gbs_api",
+                       "canonicalVolumeLink": "https://books.google.com/books/about/Android.html?hl=&id=xlp6NE2NWecC",
+                       "id": "xlp6NE2NWecC",
+                       "shelf": "Read"
+                     }
+                   ]
+                 }
+
+
+    post:
+      /search
+      description: Searches the full-list of books
+      body:
+        application/json:
+          schema: Book
+          example: |
+            {
+              "query":"ios",
+              "maxResults":1000
+            }
+
+       responses:
+        200:
+          description: Successful book list response
+          body:
+            application/json:
+              schema: BookResponse
+              example: |
+                {
+                  "response": { "status": 200, "message": "success" },
+                  "item": {
+                    "id": "1cb4ae39-c92a-4524-89de-72202ec13f0e",
+                    "title": "REST API Design Rulebook",
+                    "description": "The basic rules of REST APIs - &quot;many nouns, few verbs, stick with HTTP&quot; - seem easy, but that simplicity and power require discipline to work smoothly. This brief guide provides next steps for implementing complex projects on simple and extensible foundations.",
+                    "authors": [ "Mark Masse" ]
+                  }
+                }
+
+
+
+    delete:
+      description: Delete a book
+      responses:
+        200:
+          body:
+            application/json:
+              schema: APIResponse
+              example: |
+              {
+                "response": {
+                  "status": 200,
+                  "message": "success"
+                },
+                "books": [
+                  {
+                    "title": "HTML5 for iOS and Android: A Beginner's Guide",
+                    "authors": [
+                      "Robin Nixon"
+                    ],
+                    "publisher": "McGraw Hill Professional",
+                    "publishedDate": "2011-07-12",
+                    "description": "Essential Skills--Made Easy! Create advanced websites, web apps, and standalone apps for Apple iOS and Google Android devices. HTML5 for iOS and Android: A Beginner's Guide explains, step by step, how to use HTML5 and CSS3 as well as supporting technologies, such as JavaScript, MySQL, and PHP. Download wrapper code from the book's companion website to enable your programs to run like native iOS or Android apps. You'll also get tips for distributing your creations in various app stores. Everything you need to get started developing powerful mobile apps and websites is included in this hands-on guide. Designed for Easy Learning: Key Skills & Concepts--Chapter-opening lists of specific skills covered in the chapter Ask the Expert--Q&A sections filled with bonus information and helpful tips Notes--Extra information related to the topic being covered Tips--Helpful reminders or alternate ways of doing things Cautions--Errors and pitfalls to avoid Annotated Syntax--Example code with commentary that describes the programming techniques being illustrated Robin Nixon is a developer and freelance technical writer who has published more than 500 articles in magazines such as PC Plus, PCW, Web User, PC Advisor, and PC Answers. He is the author of several computer books, including Plug-in PHP, Plug-in JavaScript, and Plug-in CSS.",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9780071756334"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "0071756337"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": false,
+                      "image": false
+                    },
+                    "pageCount": 480,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "0.2.0.0.preview.0",
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=C6d7bMJzHy4C&printsec=frontcover&img=1&zoom=5&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=C6d7bMJzHy4C&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=C6d7bMJzHy4C&q=android&dq=android&hl=&cd=16&source=gbs_api",
+                    "infoLink": "http://books.google.com/books?id=C6d7bMJzHy4C&dq=android&hl=&source=gbs_api",
+                    "canonicalVolumeLink": "https://books.google.com/books/about/HTML5_for_iOS_and_Android_A_Beginner_s_G.html?hl=&id=C6d7bMJzHy4C",
+                    "id": "C6d7bMJzHy4C",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Migrating to Android for iOS Developers",
+                    "authors": [
+                      "Sean Liao"
+                    ],
+                    "publisher": "Apress",
+                    "publishedDate": "2014-07-18",
+                    "description": "Migrating to Android for iOS Developers gives you—as an experienced native iOS app developer—the skills to learn native Android apps development from scratch. Starting with preparing your Android integrated development environment and introducing just enough Android application framework fundamentals, you’ll understand how to create a simple but meaningful HelloAndroid project immediately. This book provides the guidelines and tutorial projects to show you how to translate your existing iOS app to the Android platform. You’ll use your mobile app knowledge to structure your Android apps in a similar way to how you would structure your iOS apps. To implement use cases with detailed screens, the most common mobile topics are discussed, including user interfaces, managing data, and networking with remote services. As you move through the book, you’ll create Android apps with rich UI components to handle common CRUD operations locally and remotely. There are many Android goodies described in the book. Instead of relying on routine text descriptions, you’ll discover the uniqueness of Android and appreciate the many features that are unique to the platform. This book also explores more powerful mobile UX patterns that are commonly used on the iOS and Android platforms. When you finish reading Migrating to Android for iOS Developers, you’ll be an Android developer as well as an iOS developer. And, you will be fully convinced you can do everything in Android that you can do in iOS.",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9781484200100"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "1484200101"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 532,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "0.4.3.0.preview.3",
+                    "panelizationSummary": {
+                      "containsEpubBubbles": false,
+                      "containsImageBubbles": false
+                    },
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=D1EnCgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=D1EnCgAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=D1EnCgAAQBAJ&pg=PA483&dq=android&hl=&cd=19&source=gbs_api",
+                    "infoLink": "https://play.google.com/store/books/details?id=D1EnCgAAQBAJ&source=gbs_api",
+                    "canonicalVolumeLink": "https://market.android.com/details?id=book-D1EnCgAAQBAJ",
+                    "id": "D1EnCgAAQBAJ",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Geolocation in IOS",
+                    "authors": [
+                      "Alasdair Allan"
+                    ],
+                    "publisher": "\"O'Reilly Media, Inc.\"",
+                    "publishedDate": "2012",
+                    "description": "Take advantage of iPhone and iPad sensors and advanced geolocation technologies to build state-of-the-art location applications. In this concise hands-on guide, author Alasdair Allan (Learning iOS Programming) takes you deep inside Apple’s Core Location framework, Map Kit, and other iOS tools, using illustrative examples and sample Objective-C code. Learn how to build location-aware apps for both iPhones and iPads, using code that detects hardware features and then adjusts your app’s behavior. If you’re a programmer with iOS experience, or a Mac developer familiar with Objective-C, this book helps you get off to a solid start in location-based app development. You’ll learn about: Core Location: Understand the significant-change location service and geo-fencing capabilities Map Kit: Embed maps into your application’s views Magnetometer: Use the on-board sensor as a digital compass Geocoding capabilities: Translate geographic coordinates into place names, and vice versa Heat maps: Get a code walkthrough for displaying these maps on top of a standard MapKit view Third-party SDKs: Add unique geo-location capabilities to your app from SkyHook Wireless, MapBox, and other providers",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9781449308445"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "1449308449"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": false,
+                      "image": true
+                    },
+                    "pageCount": 102,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "preview-1.0.0",
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=JZwC4fjDqgIC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=JZwC4fjDqgIC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=JZwC4fjDqgIC&printsec=frontcover&dq=ios&hl=&cd=4&source=gbs_api",
+                    "infoLink": "http://books.google.com/books?id=JZwC4fjDqgIC&dq=ios&hl=&source=gbs_api",
+                    "canonicalVolumeLink": "https://books.google.com/books/about/Geolocation_in_IOS.html?hl=&id=JZwC4fjDqgIC",
+                    "id": "JZwC4fjDqgIC",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Beginning iOS Game Development",
+                    "authors": [
+                      "Patrick Alessi"
+                    ],
+                    "publisher": "John Wiley & Sons",
+                    "publishedDate": "2011-11-21",
+                    "description": "Get in the game and start building games for the iPhone or iPad! Whether you only have a little experience with iOS programming or even none at all, this accessible guide is ideal for getting started developing games for the iPhone and iPad. Experienced developer and author Patrick Alessi presents the iOS system architecture, gives you the step-by-step of game development, and introduces the languages used to develop games. From the basic building blocks to including drawing, responding to user interaction, animation, and sound, this book provides a one-stop-shop for getting your game up and running. Explores the tools and methodology used to develop games for the iPhone and iPad Requires no previous experience with building a game for the iOS platform Details how iOS games require different considerations than other applications Addresses working with the Xcode programming environment, how to draw with the Quartz 2D API, ways to handle user input, and techniques for incorporating animation with Core Animation and sound with Core Audio If you're ready to jump on the gaming app bandwagon, then this book is what you need to get started!",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9781118231616"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "1118231619"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 408,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "averageRating": 1,
+                    "ratingsCount": 1,
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": true,
+                    "contentVersion": "1.8.5.0.preview.3",
+                    "panelizationSummary": {
+                      "containsEpubBubbles": false,
+                      "containsImageBubbles": false
+                    },
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=deXLegDFpfAC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=deXLegDFpfAC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=deXLegDFpfAC&printsec=frontcover&dq=ios&hl=&cd=6&source=gbs_api",
+                    "infoLink": "http://books.google.com/books?id=deXLegDFpfAC&dq=ios&hl=&source=gbs_api",
+                    "canonicalVolumeLink": "https://books.google.com/books/about/Beginning_iOS_Game_Development.html?hl=&id=deXLegDFpfAC",
+                    "id": "deXLegDFpfAC",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Learn GameSalad for iOS",
+                    "subtitle": "Game Development for iPhone, iPad, and HTML5",
+                    "authors": [
+                      "David Guerineau"
+                    ],
+                    "publisher": "Apress",
+                    "publishedDate": "2012-06-27",
+                    "description": "So you have a great idea for an iPhone or iPad game, but you've never programmed before. Where to start? Here! With GameSalad, you can design, build, and publish a 2D game in the App Store using an easy-to-use, no-programming-required game creation tool. Learn GameSalad for iOS shows you how to set up your development environment and how to create a variety of simple 2D games from a breakout-style game to an arcade shooter to a maze game. You'll also learn how to use GameSalad to create a non-game app as well. This book also takes you beyond game development into getting your game into the App Store, using iAd, and marketing your game. A clear, step-by-step approach to GameSalad for the complete beginner Create fun, complete, and fully functional game projects An idea to App Store publishing guide What you’ll learn How to set up your game design environment How to design a complete game from idea to publication with GameSalad The basics, but also some of the more advanced functions of GameSalad How to submit your game on the App Store How to start promoting your game Who this book is for If you have web development experience or no programming experience at all, you'll be able to design, build and publish a game with the help of Learn GameSalad for iOS. Table of Contents Preparing Your Design Environment Your First Game from Scratch: The Pong Game Finishing Pong: Scoring and Game Interaction Break a Wall: Implementing Comments, Accelerometer Movements, LifeManagement, and Pause Making a Shoot 'Em Up Game: Carrot Invader Learning Gravity, Basic Physics and Camera Controls: An Angry Birds-like Game, Part I Creating a Game Menu and a Particles Effect: An Angry Birds-like Game, Part II Graphics and Sound Effects: Labyrinth Bonuses, Game Center, and iAd: Break a Wall Device Internal Clock and Cyclic Movement: Non-Game Apps Submitting Your Game to the App Store Introduction to Game Promotion",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9781430243564"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "1430243562"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 420,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": true,
+                    "contentVersion": "1.1.1.0.preview.3",
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=fjp0U0Ig3yMC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=fjp0U0Ig3yMC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=fjp0U0Ig3yMC&printsec=frontcover&dq=ios&hl=&cd=7&source=gbs_api",
+                    "infoLink": "http://books.google.com/books?id=fjp0U0Ig3yMC&dq=ios&hl=&source=gbs_api",
+                    "canonicalVolumeLink": "https://books.google.com/books/about/Learn_GameSalad_for_iOS.html?hl=&id=fjp0U0Ig3yMC",
+                    "id": "fjp0U0Ig3yMC",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Sams Teach Yourself IOS 5 Application Development in 24 Hours",
+                    "authors": [
+                      "John Ray"
+                    ],
+                    "publisher": "Sams Publishing",
+                    "publishedDate": "2012",
+                    "description": "Presents twenty-four lessons on developing applications for the iPhone and iPad, and includes information on navigating the development environment, building advanced user interfaces, and integrating online services.",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9780672335761"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "067233576X"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": false,
+                      "image": true
+                    },
+                    "pageCount": 785,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "preview-1.0.0",
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=--wmC1-ZpPkC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=--wmC1-ZpPkC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=--wmC1-ZpPkC&printsec=frontcover&dq=ios&hl=&cd=8&source=gbs_api",
+                    "infoLink": "http://books.google.com/books?id=--wmC1-ZpPkC&dq=ios&hl=&source=gbs_api",
+                    "canonicalVolumeLink": "https://books.google.com/books/about/Sams_Teach_Yourself_IOS_5_Application_De.html?hl=&id=--wmC1-ZpPkC",
+                    "id": "--wmC1-ZpPkC",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Beginning iOS Storyboarding",
+                    "subtitle": "Using Xcode",
+                    "authors": [
+                      "Rory Lewis",
+                      "Yulia McCarthy",
+                      "Stephen M. Moraco"
+                    ],
+                    "publisher": "Apress",
+                    "publishedDate": "2012-10-10",
+                    "description": "The advent of iOS 5 and the newest Xcode has unveiled an innovative, design-centric set of tools called Storyboarding, for you to more easily conceptualize and design your app from top to bottom. A time saver for sure, but it's new! Dr. Rory Lewis, Yulia McCarthy and Stephen Moraco — a best selling Apress author, a former Apple iOS engineering group intern and a successful app developer — have teamed up to bring you this book, Beginning iOS Storyboarding. The three authors have found a beautiful way to lead the beginner into Storyboarding and at the same time show old school coders of Objective-C the new and exquisite methodology of this incredible tool. For the beginner who has never programmed, Beginning iOS Storyboarding shows how to extract those cool and innovative app ideas you have in your head into a working app ready for sale on the iTunes store by using Apple's new technology that allows you to skip chunks of code by just dragging scenes and segues onto your Storyboard canvas. Even if you're an intermediate or pro-level Objective-C developer, you can still learn the ins and outs of Xcode's new Storyboarding feature, and find new ways of building and debugging your new Storyboarding app. Yup: This book is also for you, too. In this book, you get the following, beyond learning the fundamentals and classical elements of Storyboarding: Design and build utilities and a location based service app using Storyboarding techniques Design and build a universal app with a rich user interface and user experience (UX) Create a fun game app, and more What you’ll learn How iOS Storyboarding is like a different planet in the Xcode universe. We do this by introducing you to the standard transitions to views, passing data to the views, returning data from the views, and, lastly, showing how to navigate the critical transitions to views. How to develop a simple utility app using Storyboarding. Here we learn the foundation of many apps, which is how to place controls on the settings screen of a utility application and to return those settings to the main view of the app via the settings view delegate protocol. How to develop an app with an advanced MKMapView. Specifically, we introduce you to override the default views provided by Apple’s initial project templates. This opens the door to you being able to code specialized views such as MKMapView, and utilize iOS Location Services for building navigation-based apps. What are the cool, powerful tools that enable you to create page controller view transitions. We dig deep into the ins and outs of how to apply the UIPageControls to display views and supply traditional view notification to controlled views. How to create a very cool universal app while you learn how to develop table views, which in the iPad case, present themselves differently depending upon the device orientation using the UISplitViewController. How to build a universal app with two Storyboards (one for iPhone, one for iPad) and provide techniques and tips for developing universal apps. How to build a tabbed app that stores and manages user documents in the iCloud. How to develop a cool game app which stretches your knowledge of how segues can be used to provide much more complex navigation paths between screens and devices, as well as accessibility with Apple’s iOS Game Center. Who this book is for This book is for the beginner who has never programmed, but can use the Storyboarding tool in Xcode to get up and running fast. This book is also for experienced iOS developers who wish to learn Storyboarding to quickly cut down on their app development and debugging time. Table of Contents Preliminaries Fundamentals Storyboarding with MapView Building a Utility Application Storyboarding a Page-Based App Mastering Table Views with Storyboarding: Core Data Setup Mastering Table Views with Storyboarding: Designing the Flow Mastering Table Views with Storyboarding: Coding the Backend Single View #3: wanderBoard Part I Single View #3: wanderBoard Part II Single View #3: wanderBoard Part III How Far You Have Come",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9781430242727"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "1430242728"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 644,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": true,
+                    "contentVersion": "1.4.5.0.preview.3",
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=sGsCvFqnbvQC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=sGsCvFqnbvQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=sGsCvFqnbvQC&printsec=frontcover&dq=ios&hl=&cd=9&source=gbs_api",
+                    "infoLink": "http://books.google.com/books?id=sGsCvFqnbvQC&dq=ios&hl=&source=gbs_api",
+                    "canonicalVolumeLink": "https://books.google.com/books/about/Beginning_iOS_Storyboarding.html?hl=&id=sGsCvFqnbvQC",
+                    "id": "sGsCvFqnbvQC",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Sams Teach Yourself Core Data for Mac and iOS in 24 Hours",
+                    "authors": [
+                      "Jesse Feiler"
+                    ],
+                    "publisher": "Sams Publishing",
+                    "publishedDate": "2012-06-12",
+                    "description": "In just 24 sessions of one hour or less, start using Core Data to build powerful data-driven apps for iOS devices and Mac OS X computers! Using this book’s straightforward, step-by-step approach, you’ll discover how Apple’s built-in data persistence framework can help you meet any data-related requirement, from casual to enterprise-class. Beginning with the absolute basics, you’ll learn how to create data models, build interfaces, interact with users, work with data sources and table views. Every lesson builds on what you’ve already learned, giving you a rock-solid foundation for real-world success! Step-by-step instructions carefully walk you through the most common Core Data development tasks. Quizzes and Exercises at the end of each chapter help you test your knowledge. Notes present interesting information related to the discussion. Tips offer advice or show you easier ways to perform tasks. Cautions alert you to possible problems and give you advice on how to avoid them. Jesse Feiler is a leading expert on Apple database development. Feiler has worked with databases since the 1980s, writing about technologies that have since evolved into Core Data. His database clients have included Federal Reserve Bank of New York, Young & Rubicam, and many small and nonprofit organizations. His recent books include Data-Driven iOS Apps for iPad and iPhone with FileMaker Pro, Bento by FileMaker, and FileMaker Go; and FileMaker 12 in Depth. Learn how to… • Start writing database apps fast, with Xcode 4’s powerful tools and templates • Master the Objective-C features and patterns Core Data relies upon • Understand Core Data’s goals, components, and behavior • Model data graphically with Xcode 4’s Data Model Editor • Leverage the full power of Managed Objects • Use controllers to integrate your data model with your code • Fetch, use, and store data from any source • Develop interfaces and features more quickly with Interface Builder • Add navigation and control features that integrate seamlessly with Core Data • Interact with users via popovers, segmented controls, action sheets, and tab bars • Create table views that users can edit • Let Xcode 4 and Core Data validate your data for you • Use predicates to precisely select the right data • Get ready for iCloud features to sync and move data among your iCloud-enabled devices Category: iOS/Mac Programming Covers: Core Data User Level: Beginning-to-Intermediate",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9780133105087"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "0133105083"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 480,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "2.5.4.0.preview.3",
+                    "panelizationSummary": {
+                      "containsEpubBubbles": false,
+                      "containsImageBubbles": false
+                    },
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=qlC61hPMrCcC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=qlC61hPMrCcC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=qlC61hPMrCcC&printsec=frontcover&dq=ios&hl=&cd=10&source=gbs_api",
+                    "infoLink": "https://play.google.com/store/books/details?id=qlC61hPMrCcC&source=gbs_api",
+                    "canonicalVolumeLink": "https://market.android.com/details?id=book-qlC61hPMrCcC",
+                    "id": "qlC61hPMrCcC",
+                    "shelf": "currentlyReading"
+                  },
+                  {
+                    "title": "The IOS 5 Developer's Cookbook",
+                    "subtitle": "Core Concepts and Essential Recipes for IOS Programmers",
+                    "authors": [
+                      "Erica Sadun"
+                    ],
+                    "publisher": "Addison-Wesley Professional",
+                    "publishedDate": "2012",
+                    "description": "Provides information on building iOS 5 applications for iPhone, iPad, and iPod Touch.",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9780321754264"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "0321754263"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": false,
+                      "image": true
+                    },
+                    "pageCount": 790,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "preview-1.0.0",
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=KwGf4mS5sWAC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=KwGf4mS5sWAC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=KwGf4mS5sWAC&printsec=frontcover&dq=ios&hl=&cd=11&source=gbs_api",
+                    "infoLink": "http://books.google.com/books?id=KwGf4mS5sWAC&dq=ios&hl=&source=gbs_api",
+                    "canonicalVolumeLink": "https://books.google.com/books/about/The_IOS_5_Developer_s_Cookbook.html?hl=&id=KwGf4mS5sWAC",
+                    "id": "KwGf4mS5sWAC",
+                    "shelf": "read"
+                  },
+                  {
+                    "title": "Pro Multithreading and Memory Management for iOS and OS X",
+                    "subtitle": "with ARC, Grand Central Dispatch, and Blocks",
+                    "authors": [
+                      "Kazuki Sakamoto",
+                      "Tomohiko Furumoto"
+                    ],
+                    "publisher": "Apress",
+                    "publishedDate": "2012-04-25",
+                    "description": "If you want to develop efficient, smooth-running applications, controlling concurrency and memory are vital. Automatic Reference Counting is Apple's game-changing memory management system, new to Xcode 4.2. Pro Multithreading and Memory Management for iOS and OS X shows you how ARC works and how best to incorporate it into your applications. Grand Central Dispatch (GCD) and blocks are key to developing great apps, allowing you to control threads for maximum performance. If for you, multithreading is an unsolved mystery and ARC is unexplored territory, then this is the book you'll need to make these concepts clear and send you on your way to becoming a master iOS and OS X developer. What are blocks? How are they used with GCD? Multithreading with GCD Managing objects with ARC What you’ll learn How to use blocks How blocks work and are implemented Details about GCD How and when to use GCD To understand ARC technology and how to use it Who this book is for This book is for professional OS X and iOS application programmers. In particular, it's for those who want to develop highly responsive applications with concurrent programming. Table of Contents Life before Automatic Reference Counting ARC Rules ARC Implementation Getting Started with Blocks Blocks Implementation Grand Central Dispatch GCD Basics GCD Implementation Appendix A. Example of ARC, Blocks and GCD Appendix B. References",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9781430241164"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "1430241160"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 200,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": true,
+                    "contentVersion": "0.2.2.0.preview.3",
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=DWLliqxGXycC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=DWLliqxGXycC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=DWLliqxGXycC&printsec=frontcover&dq=ios&hl=&cd=12&source=gbs_api",
+                    "infoLink": "http://books.google.com/books?id=DWLliqxGXycC&dq=ios&hl=&source=gbs_api",
+                    "canonicalVolumeLink": "https://books.google.com/books/about/Pro_Multithreading_and_Memory_Management.html?hl=&id=DWLliqxGXycC",
+                    "id": "DWLliqxGXycC",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Beginning iOS Game Center and Game Kit",
+                    "subtitle": "For iPhone, iPad, and iPod touch",
+                    "authors": [
+                      "Kyle Richter"
+                    ],
+                    "publisher": "Apress",
+                    "publishedDate": "2011-11-23",
+                    "description": "Beginning iOS Game Center and Game Kit shows you how to use Game Center and Game Kit to create fun and polished games that use advanced features such as social networking and voice over IP (VoIP). Game Kit and Game Center can help you reach new customers through social interaction, so this book shows you how you can quickly add a level of polish to your app that used to take weeks of hard work and late nights. Implementing a leaderboard and achievement system has never been so simple! Gone are the days of writing your own server. You'll also see how to easily add advanced networking concepts like VoIP support in hours, not days. Learn how to quickly implement many advanced social networking concepts into your apps. You'll be guided through the process of creating a custom Game Center Manager class that can be rapidly deployed into any of your new or existing projects. Furthermore, learn how to avoid pitfalls commonly encountered by new Game Center developers. What you’ll learn What Game Center and Game Kit are and how you can improve your app by using them How to configure your app with iTunes Connect to work with Game Center How to set up leaderboard and achievement systems for use within your app How to add a custom graphical user interface to Game Center to match the look and feel of your product What multiplayer and networking does to your app through Game Kit How to write an easy-to-implement and reusable Game Center Manager Who this book is for All iOS developers who want to easily bring their current or planned app to the next level. Game Center and Game Kit, despite the name, are not limited only to games—all iOS developers with a basic understanding of Cocoa and UIKit will find something useful in these APIs. They allow even a novice iOS developer to add an amazing level of polish to their apps with a minimal amount of effort. Table of Contents 1 - Introduction 2 - First Steps 3 - Leaderboards 4 - Achievements 5 - Matchmaking 6 - Peer Picker 7 - Networking Overview 8 - Exchanging Data 9 - Turned Based Gaming 10 - Voice Chat 11 - In-game Payments",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9781430235279"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "1430235276"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 240,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "1.2.1.0.preview.3",
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=LLtXdzYnXtQC&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=LLtXdzYnXtQC&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=LLtXdzYnXtQC&printsec=frontcover&dq=ios&hl=&cd=13&source=gbs_api",
+                    "infoLink": "http://books.google.com/books?id=LLtXdzYnXtQC&dq=ios&hl=&source=gbs_api",
+                    "canonicalVolumeLink": "https://books.google.com/books/about/Beginning_iOS_Game_Center_and_Game_Kit.html?hl=&id=LLtXdzYnXtQC",
+                    "id": "LLtXdzYnXtQC",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Learn SpriteBuilder for iOS Game Development",
+                    "authors": [
+                      "Steffen Itterheim"
+                    ],
+                    "publisher": "Apress",
+                    "publishedDate": "2014-11-26",
+                    "description": "SpriteBuilder is the fun and versatile game development environment that is a natural successor to Cocos2D, Cocos3D, and Chipmunk2D. In Learn SpriteBuilder for iOS Game Development, experienced game developer and author Steffen Itterheim shows you how to get the most out of SpriteBuilder to create a full-featured 2D action game that you can use as a basis for your own games. You'll learn SpriteBuilder best practices, how to incorporate SpriteBuilder into your game development workflow, and how to use the various features of SpriteBuilder, including game physics, scrolling, menus, and playing audio assets. You'll learn everything from the basics to advanced topics like visual effects, soft-body physics, rendering textured polygons and porting to Android. You'll be using both SpriteBuilder and the latest version of Cocos2D, version 3. If you have a bit of iOS development experience and you want to learn to create imaginative 2D games, Learn SpriteBuilder for iOS Game Development is exactly the book you need.",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9781484202623"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "1484202627"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 456,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "0.4.3.0.preview.3",
+                    "panelizationSummary": {
+                      "containsEpubBubbles": false,
+                      "containsImageBubbles": false
+                    },
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=tVcnCgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=tVcnCgAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=tVcnCgAAQBAJ&pg=PA13&dq=ios&hl=&cd=15&source=gbs_api",
+                    "infoLink": "https://play.google.com/store/books/details?id=tVcnCgAAQBAJ&source=gbs_api",
+                    "canonicalVolumeLink": "https://market.android.com/details?id=book-tVcnCgAAQBAJ",
+                    "id": "tVcnCgAAQBAJ",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Dive into iOS",
+                    "authors": [
+                      "Phoebe Parry"
+                    ],
+                    "publisher": "BookRix",
+                    "publishedDate": "2016-05-07",
+                    "description": "This updated and expanded second edition of Book provides a user-friendly introduction to the subject, Taking a clear structural framework, it guides the reader through the subject's core elements. A flowing writing style combines with the use of illustrations and diagrams throughout the text to ensure the reader understands even the most complex of concepts. This succinct and enlightening overview is a required reading for all those interested in the subject . We hope you find this book useful in shaping your future career & Business.",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9783739652870"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "373965287X"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 95,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "1.1.1.0.preview.3",
+                    "panelizationSummary": {
+                      "containsEpubBubbles": false,
+                      "containsImageBubbles": false
+                    },
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=a4MjDAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=a4MjDAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=a4MjDAAAQBAJ&pg=PT3&dq=ios&hl=&cd=17&source=gbs_api",
+                    "infoLink": "https://play.google.com/store/books/details?id=a4MjDAAAQBAJ&source=gbs_api",
+                    "canonicalVolumeLink": "https://market.android.com/details?id=book-a4MjDAAAQBAJ",
+                    "id": "a4MjDAAAQBAJ",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Mastering iOS Frameworks",
+                    "subtitle": "Beyond the Basics",
+                    "authors": [
+                      "Kyle Richter",
+                      "Joe Keeley"
+                    ],
+                    "publisher": "Addison-Wesley Professional",
+                    "publishedDate": "2015-04-11",
+                    "description": "Apple’s iOS SDK provides an amazingly powerful collection of frameworks. But it has been difficult to find detailed and useful knowledge about them–until now. With this book’s practical insights and tested code, you can use Apple’s frameworks to create apps that are more innovative and usable…faster and more reliable…more successful and profitable. Kyle Richter and Joe Keeley focus on intermediate-to-advanced techniques that professional iOS developers can use every day. Their far-reaching coverage ranges from social support to security, Core Data to iCloud–even Apple Watch. Organized as a convenient modular reference, nearly every chapter contains a complete Objective-C sample project. A multi-chapter Game Center case study shows how multiple iOS features can be combined to do even more. All source code may be downloaded at https://github.com/dfsw/icf. Coverage includes: Adding physics-like animation and behaviors to UIViews Using Core Location to determine device location, display customized maps, and implement geofencing Making games and apps social with Leaderboards Accessing music and image collections Building health/fitness apps with HealthKit Integrating with home automation via HomeKit Passing data between platforms using JSON Setting up local and remote notifications Remotely storing and syncing data with CloudKit Accessing app functionality with extensions Effortlessly adding AirPrint support Providing Handoff continuity between iOS 8 and Yosemite devices Getting productive with Core Data Integrating Twitter and Facebook via Social Framework Performing resource-intensive tasks with Grand Central Dispatch Securing user data with Keychain and Touch ID Customizing collection views Making the most of gesture recognizers Creating and distributing “passes” Debugging, instrumenting, and profiling apps",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9780134052526"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "0134052528"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 576,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "1.3.3.0.preview.3",
+                    "panelizationSummary": {
+                      "containsEpubBubbles": false,
+                      "containsImageBubbles": false
+                    },
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=cUINCAAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=cUINCAAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=cUINCAAAQBAJ&pg=PT29&dq=ios&hl=&cd=18&source=gbs_api",
+                    "infoLink": "https://play.google.com/store/books/details?id=cUINCAAAQBAJ&source=gbs_api",
+                    "canonicalVolumeLink": "https://market.android.com/details?id=book-cUINCAAAQBAJ",
+                    "id": "cUINCAAAQBAJ",
+                    "shelf": "none"
+                  },
+                  {
+                    "title": "Migrating to Android for iOS Developers",
+                    "authors": [
+                      "Sean Liao"
+                    ],
+                    "publisher": "Apress",
+                    "publishedDate": "2014-07-18",
+                    "description": "Migrating to Android for iOS Developers gives you—as an experienced native iOS app developer—the skills to learn native Android apps development from scratch. Starting with preparing your Android integrated development environment and introducing just enough Android application framework fundamentals, you’ll understand how to create a simple but meaningful HelloAndroid project immediately. This book provides the guidelines and tutorial projects to show you how to translate your existing iOS app to the Android platform. You’ll use your mobile app knowledge to structure your Android apps in a similar way to how you would structure your iOS apps. To implement use cases with detailed screens, the most common mobile topics are discussed, including user interfaces, managing data, and networking with remote services. As you move through the book, you’ll create Android apps with rich UI components to handle common CRUD operations locally and remotely. There are many Android goodies described in the book. Instead of relying on routine text descriptions, you’ll discover the uniqueness of Android and appreciate the many features that are unique to the platform. This book also explores more powerful mobile UX patterns that are commonly used on the iOS and Android platforms. When you finish reading Migrating to Android for iOS Developers, you’ll be an Android developer as well as an iOS developer. And, you will be fully convinced you can do everything in Android that you can do in iOS.",
+                    "industryIdentifiers": [
+                      {
+                        "type": "ISBN_13",
+                        "identifier": "9781484200100"
+                      },
+                      {
+                        "type": "ISBN_10",
+                        "identifier": "1484200101"
+                      }
+                    ],
+                    "readingModes": {
+                      "text": true,
+                      "image": true
+                    },
+                    "pageCount": 532,
+                    "printType": "BOOK",
+                    "categories": [
+                      "Computers"
+                    ],
+                    "maturityRating": "NOT_MATURE",
+                    "allowAnonLogging": false,
+                    "contentVersion": "0.4.3.0.preview.3",
+                    "panelizationSummary": {
+                      "containsEpubBubbles": false,
+                      "containsImageBubbles": false
+                    },
+                    "imageLinks": {
+                      "smallThumbnail": "http://books.google.com/books/content?id=D1EnCgAAQBAJ&printsec=frontcover&img=1&zoom=5&edge=curl&source=gbs_api",
+                      "thumbnail": "http://books.google.com/books/content?id=D1EnCgAAQBAJ&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api"
+                    },
+                    "language": "en",
+                    "previewLink": "http://books.google.com/books?id=D1EnCgAAQBAJ&pg=PA171&dq=ios&hl=&cd=19&source=gbs_api",
+                    "infoLink": "https://play.google.com/store/books/details?id=D1EnCgAAQBAJ&source=gbs_api",
+                    "canonicalVolumeLink": "https://market.android.com/details?id=book-D1EnCgAAQBAJ",
+                    "id": "D1EnCgAAQBAJ",
+                    "shelf": "none"
+                  }
+                ]
+              }

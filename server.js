@@ -34,13 +34,15 @@ app.get("/api/books",function(req, res){
   try{
     res.status(200);
     res.json({
-      books : fullBookList.books.filter(function(book){
+      "response": { "status": 200, "message": "success" },
+      "books" : fullBookList.books.filter(function(book){
         return book.shelf !== "none";
       })
     });
   }catch(e){
     res.status(500);
-    res.json({"error" : e});
+    res.json({"response": { "status": 500, "message": "fail" },
+              "error" : e});
   }
 });
 
@@ -51,13 +53,17 @@ app.put("/api/books/:booksId",function(req, res){
     for(i=0; i<fullBookList.books.length; i++)
       if(fullBookList.books[i].id == req.params.booksId){
         fullBookList.books[i].shelf = req.body.shelf;
-        res.json({book : fullBookList.books[i]});
+        res.json({
+            "book" : fullBookList.books[i],
+            "response": { "status": 200, "message": "success" }
+        });
         break;
       }
     res.status(200);
   }catch(e){
+    res.json({"response": { "status": 500, "message": "fail" },
+              "error" : e});
     res.status(500);
-    res.json({"error" : e});
   }
 });
 
@@ -74,7 +80,8 @@ app.post("/api/search",function(req, res){
   try{
     res.status(200);
     res.json({
-      books : fullBookList.books.filter(function(book){
+      "response": { "status": 200, "message": "success" },
+      "books" : fullBookList.books.filter(function(book){
         var title = book.title.toLocaleLowerCase(),
           query = req.body.query.toLocaleLowerCase();
         return title.indexOf(query) > 1;
@@ -82,7 +89,8 @@ app.post("/api/search",function(req, res){
     });
   }catch(e){
     res.status(500);
-    res.json({"error" : e});
+    res.json({"response": { "status": 500, "message": "fail" },
+              "error" : e});
   }
 });
 
