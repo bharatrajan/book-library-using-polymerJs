@@ -20,7 +20,7 @@
     "iron-pages": "^2.0.0"
   },
   "devDependencies": {
-    "web-component-tester": "^4.0.0",
+    "web-component-tester": "^6.0.1",
     "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
     "chai-dom": "^1.4.3",
     "paper-spinner": "^1.0.0"
@@ -31,6 +31,9 @@
     "iron-flex-layout": "~1.2.2",
     "paper-spinner": "^1.0.0",
     "webcomponentsjs": "^v1.0.2",
-    "paper-button": "^2.0.0"
+    "paper-button": "^2.0.0",
+    "web-component-tester": "^4.0.0",
+    "mocha": "^3.1.2",
+    "test-fixture": "^3.0.0-rc.1"
   }
 }
