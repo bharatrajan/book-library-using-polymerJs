@@ -21,12 +21,13 @@ Polymer({
         },
 
         /**
-         * @description - CSS class for this node
-         * @value : String
+         * @description - Attribute becomes true when this page is viewd.
+         * @description - Set by iron-pages, the parent element.
+         * @value : Boolean
          */
-        class: {
-            type: String,
-            observer: "onPageView"
+        active: {
+            type: Boolean,
+            observer: "onPageActive"
         }
     },
 
@@ -38,17 +39,15 @@ Polymer({
     },
 
     /**
-     * @description - Observer triggers when class list for this
-     * @description - node changes. While user sees this view,
-     * @description - classList will contain "iron-selected".
-     * @description - Creates and attach booksAPI
+     * @description - Observer triggers when "active" Attribute for
+     * @description - this node changes. While user sees this view.
      * @description - Fires pageview event to GA
      * @observer
-     * @param {string} cssClassListAsString - classList as a string
+     * @param {Boolean} isActive - true when user seeing this view
      * @returns null
      */
-    onPageView: function(cssClassListAsString){
-      if(cssClassListAsString.indexOf("iron-selected") !== -1){
+    onPageActive: function(isActive){
+      if(isActive){
 
         //Makes get all books call
         if(!this.BooksApi){

@@ -38,7 +38,7 @@
   <body>
       <template is="dom-bind">
         <app-location use-hash-as-path route="{{route}}" id="viewSwitch"></app-location>
-        <iron-pages selected="[[route.path]]" attr-for-selected="name">
+        <iron-pages selected="[[route.path]]" attr-for-selected="name" selected-attribute="active">
           <book-listing name="list" ></book-listing>
           <book-lookup name="search" ></book-lookup>
         </iron-pages>
