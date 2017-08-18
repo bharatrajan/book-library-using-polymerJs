@@ -98,15 +98,24 @@
          * @returns none
          */
         bulkUpdate: function(selectedBookList, newShelf) {
+
+            //Sending analytics info
+            ga('send', {
+              hitType: 'event',
+              eventCategory: 'Addition',
+              eventAction: 'BulkBooksAdded',
+              fieldsObject: {
+                "shelf": newShelf
+              }
+            });
+
+            //Do update for every book
             for (var bookid in selectedBookList) {
                 if (selectedBookList[bookid]) {
                     this.updateBook(bookid, newShelf);
                 }
             }
-            var booksApiList = document.getElementsByTagName('Books-api');
-            for (var i = booksApiList.length - 1; i >= 0; i--) {
-                booksApiList[i].fire("refreshList");
-            };
+
             return null;
         },
 

@@ -9,6 +9,14 @@
 
     <link rel="import" href="bower_components/polymer/polymer.html">
     <script type="text/javascript">
+      //Analytics initialization
+      window.webAnalytics = {};
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-104834528-1', 'auto');
+
       //Call webcomponents-lite.js if required
       (function(isWebcomponentsPresent){
           if(!isWebcomponentsPresent){

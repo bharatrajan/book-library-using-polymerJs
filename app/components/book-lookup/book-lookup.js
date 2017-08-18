@@ -36,11 +36,19 @@ Polymer({
         userInput: {
             type: String,
             observer: "onUserType"
+        },
+
+        /**
+         * @description - CSS class for this node
+         * @value : String
+         */
+        class: {
+            type: String,
+            observer: "onPageView"
         }
     },
 
     listeners: {
-        "refreshList": "_cleanUp",
         "ONSELECTED": "onBookSelected",
         "ONUNSELECTED": "onBookUnselected",
         "onSearchSuccess": "onSearchSuccess",
@@ -87,15 +95,51 @@ Polymer({
     },
 
     /**
+     * @description - Observer triggers when class list for this
+     * @description - node changes. While user sees this view,
+     * @description - classList will contain "iron-selected".
+     * @description - Fires pageview event to GA
+     * @observer
+     * @param {string} cssClassListAsString - classList as a string
+     * @returns null
+     */
+    onPageView: function(cssClassListAsString){
+      if(cssClassListAsString.indexOf("iron-selected") !== -1){
+
+        //Fires pageview event to GA
+        //Sets isBookLookupViewed to true
+        if(!webAnalytics.isBookLookupViewed){
+          ga('send', {
+            hitType: 'pageview',
+            page: '/' + location.hash
+          });
+          webAnalytics.isBookLookupViewed = true;
+        }
+
+      }
+    },
+
+    /**
      * @description - Wrapper for BooksApi.searchBook
-     * @description - observer for this.userInput property
+     * @description - observer for this.userInput property.
+     * @description - Fire BookSearch event to GA.
      * @observer
      * @param {string} userInput - user typed input
      * @returns null
      */
     onUserType: function(userInput) {
-        if(this.BooksApi)
-          this.BooksApi.searchBook(userInput);
+
+        //Firing book search event
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'Search',
+          eventAction: 'BookSearch',
+          fieldsObject: {
+            "searchWord": userInput
+          }
+        });
+
+        if(this.BooksApi) this.BooksApi.searchBook(userInput);
         return null;
     },
 
@@ -224,13 +268,24 @@ Polymer({
     /**
      * @description - eventListener for onBookShelfChanged event
      * @description - Updates the shelf of the current book
-     * @description - Wrapper for BooksApi.updateBook
+     * @description - Wrapper for BooksApi.updateBook.
+     * @description - Fires BookAdded event to GA.
      * @eventListener
      * @param {object} event - onBookShelfChanged event
      * @param {object} detail - Additional data from onBookShelfChanged event
      * @returns null
      */
     onBookShelfChanged: function(event, detail) {
+        //Fires BookAdded event to GA.
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'Addition',
+          eventAction: 'BookAdded',
+          fieldsObject: {
+            "shelf": detail.newShelf
+          }
+        });
+
         this.BooksApi.updateBook(detail.bookId, detail.newShelf);
         return null;
     }

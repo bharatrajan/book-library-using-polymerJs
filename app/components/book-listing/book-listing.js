@@ -18,16 +18,56 @@ Polymer({
               "wantToReadList": [],
               "readList": []
           }
-        }
+        },
 
+        /**
+         * @description - CSS class for this node
+         * @value : String
+         */
+        class: {
+            type: String,
+            observer: "onPageView"
+        }
     },
 
     listeners: {
-        "refreshList": "onUpdateSuccess",
         "onAPIError": "onAPIError",
         "onGetSuccess": "onGetSuccess",
         "onUpdateSuccess": "onUpdateSuccess",
         "onBookShelfChanged": "onBookShelfChanged"
+    },
+
+    /**
+     * @description - Observer triggers when class list for this
+     * @description - node changes. While user sees this view,
+     * @description - classList will contain "iron-selected".
+     * @description - Creates and attach booksAPI
+     * @description - Fires pageview event to GA
+     * @observer
+     * @param {string} cssClassListAsString - classList as a string
+     * @returns null
+     */
+    onPageView: function(cssClassListAsString){
+      if(cssClassListAsString.indexOf("iron-selected") !== -1){
+
+        //Makes get all books call
+        if(!this.BooksApi){
+          this.BooksApi = new BooksApi({});
+          this.appendChild(this.BooksApi);
+        }
+        this.BooksApi.getAllBooks();
+
+        //Fires pageview event to GA
+        //Sets isBookListingViewed to true
+        if(!webAnalytics.isBookListingViewed){
+          ga('send', {
+            hitType: 'pageview',
+            page: '/' + location.hash
+          });
+          webAnalytics.isBookListingViewed = true;
+        }
+
+      }
     },
 
     /**
@@ -84,13 +124,23 @@ Polymer({
     /**
      * @description - eventListener for onBookShelfChanged event
      * @description - Updates the shelf of the current book
-     * @description - Wrapper for BooksApi.updateBook
+     * @description - Wrapper for BooksApi.updateBook.
+     * @description - Fire "BookShelfChanged" event to GA.
      * @eventListener
      * @param {object} event - onBookShelfChanged event
      * @param {object} detail - Additional data from onBookShelfChanged event
      * @returns null
      */
     onBookShelfChanged: function(event, detail) {
+        ga('send', {
+          hitType: 'event',
+          eventCategory: 'Change',
+          eventAction: 'BookShelfChanged',
+          fieldsObject: {
+            "shelf": detail.newShelf
+          }
+        });
+
         this.BooksApi.updateBook(detail.bookId, detail.newShelf);
         return null;
     },
@@ -105,20 +155,6 @@ Polymer({
      * @returns null
      */
     onUpdateSuccess: function(event, detail) {
-        this.BooksApi.getAllBooks();
-        return null;
-    },
-
-    /**
-     * @description - Sets this.appRouter
-     * @description - Creates and attach booksAPI
-     * @description - Makes BooksApi.getAllBooks call
-     * @lifeCycle
-     * @returns null
-     */
-    attached: function() {
-        this.BooksApi = new BooksApi({});
-        this.appendChild(this.BooksApi);
         this.BooksApi.getAllBooks();
         return null;
     }
