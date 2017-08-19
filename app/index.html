@@ -18,16 +18,17 @@
       ga('create', 'UA-104834528-1', 'auto');
 
       //Call webcomponents-lite.js if required
-      (function(isWebcomponentsPresent){
-          if(!isWebcomponentsPresent){
+      window.isWebcomponentsPresent = 'registerElement' in document &&
+                                      'import' in document.createElement('link') &&
+                                      'content' in document.createElement('template');
+      (function(){
+        if(!window.isWebcomponentsPresent){
           var l = document.createElement("script");
           l.async = true;
           l.src = "bower_components/webcomponentsjs/webcomponents-lite.js";
           document.head.appendChild(l);
         }
-      })('registerElement' in document
-                  && 'import' in document.createElement('link')
-                  && 'content' in document.createElement('template'));
+      })();
 
     </script>
 

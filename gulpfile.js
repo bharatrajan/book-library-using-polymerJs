@@ -75,7 +75,17 @@ gulp.task('build-index', function(){
                     type: 'timestamp'
                   }))
                   .pipe(vulcanize({
-                                    excludes: [],
+                                    excludes: [
+                                              "app/bower_components/app-route/app-location.html",
+                                              "app/bower_components/paper-input/paper-input.html",
+                                              "app/bower_components/iron-pages/iron-pages.html",
+                                              "app/bower_components/iron-ajax/iron-ajax.html",
+                                              "app/components/books-api/books-api.html",
+                                              "app/components/single-book/single-book.html",
+                                              "app/components/book-shelf/book-shelf.html",
+                                              "app/components/book-listing/book-listing.html",
+                                              "app/components/book-lookup/book-lookup.html"
+                                              ],
                                     stripExcludes: false,
                                     inlineScripts: true,
                                     inlineCss: true,
