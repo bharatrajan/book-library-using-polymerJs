@@ -1,5 +1,7 @@
 # book-library-using-polymerJs
 
+[`DEMO`](http://bharat-library-using-polymer-js.mybluemix.net)
+
 ## My Reads
 This project contains the following functionalities
 - 3 classifications of books
